@@ -26,9 +26,8 @@ import (
 
 func InitRestRoutes() http.Handler {
 	r := mux.NewRouter()
-
+	r.HandleFunc("/request/{service}/{path}", messagebus.ProxyHandler)
 	s := r.PathPrefix("/api/v1").Subrouter()
-	s.HandleFunc("/request/{service}/{path}", messagebus.ProxyHandler)
 	s.HandleFunc("/profile/download", handler.DowloadProfile).Methods(http.MethodGet)
 
 	return r

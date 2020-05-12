@@ -18,7 +18,6 @@ package core
 
 import (
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/phanvanhai/cloud-ui-go/internal/configs"
@@ -55,20 +54,10 @@ func AuthFilter(h http.Handler) http.Handler {
 			return
 		}
 
-		var token string
-		u := r.URL.RawQuery
-		params, _ := url.ParseQuery(u)
-		value, ok := params[SessionTokenKey]
-		if ok {
-			token = value[0]
-		} else {
-			token = r.Header.Get(SessionTokenKey)
-		}
-
 		for prefix := range configs.ProxyMapping {
 			if strings.HasPrefix(path, prefix) {
 				path = strings.TrimPrefix(path, prefix)
-				ProxyHandler(w, r, path, prefix, token)
+				ProxyHandler(w, r, path, prefix)
 				return
 			}
 		}

@@ -33,7 +33,7 @@ const (
 	ForwardedHostReqHeader = "X-Forwarded-Host"
 )
 
-func ProxyHandler(w http.ResponseWriter, r *http.Request, path string, prefix string, token string) {
+func ProxyHandler(w http.ResponseWriter, r *http.Request, path string, prefix string) {
 	defer r.Body.Close()
 
 	port := configs.GetConfig().Server.Port
@@ -49,8 +49,6 @@ func ProxyHandler(w http.ResponseWriter, r *http.Request, path string, prefix st
 		service += configs.ProxyConf.CoreMetadataPort
 	case configs.ProxyConf.CoreCommandPath:
 		service += configs.ProxyConf.CoreCommandPort
-	case configs.ProxyConf.CoreExportPath:
-		service += configs.ProxyConf.CoreExportPort
 	case configs.ProxyConf.RuleEnginePath:
 		service += configs.ProxyConf.RuleEnginePort
 	case configs.ProxyConf.SupportLoggingPath:
@@ -61,7 +59,7 @@ func ProxyHandler(w http.ResponseWriter, r *http.Request, path string, prefix st
 		service += configs.ProxyConf.SupportSchedulerPort
 	}
 	path = strings.ReplaceAll(path, "/", ":")
-	newPath := fmt.Sprintf("/api/v1/request/%s/%s", service, path)
+	newPath := fmt.Sprintf("/request/%s/%s", service, path)
 	origin, _ := url.Parse(targetAddr)
 
 	director := func(req *http.Request) {

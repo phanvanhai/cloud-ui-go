@@ -1,6 +1,6 @@
 [Service]
 Host = "localhost"
-Port = 4000
+Port = 4002
 Labels = []
 OpenMsg = "edgeX ui started"
 StaticResourcesPath = "./static"

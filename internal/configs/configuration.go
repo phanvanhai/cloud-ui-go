@@ -76,9 +76,6 @@ type DynamicProxy struct {
 	CoreCommandPath string
 	CoreCommandPort string
 
-	CoreExportPath string
-	CoreExportPort string
-
 	RuleEnginePath string
 	RuleEnginePort string
 
@@ -130,7 +127,6 @@ func initProxyMapping() {
 	ProxyMapping[ProxyConf.CoreDataPath] = ProxyConf.CoreDataPort
 	ProxyMapping[ProxyConf.CoreMetadataPath] = ProxyConf.CoreMetadataPort
 	ProxyMapping[ProxyConf.CoreCommandPath] = ProxyConf.CoreCommandPort
-	ProxyMapping[ProxyConf.CoreExportPath] = ProxyConf.CoreExportPort
 
 	ProxyMapping[ProxyConf.RuleEnginePath] = ProxyConf.RuleEnginePort
 
