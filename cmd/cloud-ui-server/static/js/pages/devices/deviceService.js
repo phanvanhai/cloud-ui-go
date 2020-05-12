@@ -18,21 +18,45 @@ $(document).ready(function() {
     //init loading data.
     orgEdgexFoundry.deviceService.loadDeviceService();
     orgEdgexFoundry.deviceService.loadDeviceProfile();
-
 });
 
 orgEdgexFoundry.deviceService = (function() {
     "use strict";
 
     function DeviceService() {
-        this.dsListCache = [];
-        this.profileListCache = [];
         this.deviceServiceListCache = [];
         this.selectedRow = null;
         this.deviceProtocols = null;
+        this.currentProtocols = null;
 
         this.selectedDeviceServiceName = null;
-
+        this.allDeviceServiceNameList = null;
+        this.allDeviceProfileNameList = null;
+        this.deviceProtocolsPropertiesTemplate = [{
+            'Protocol': 'General',
+            'Alias': 'General',
+            'Properties': [{
+                    'Key': 'Type',
+                    'Value': 'Device',
+                    'Hint': '(required)'
+                },
+                {
+                    'Key': 'NetworkLinkKey',
+                    'Value': '',
+                    'Hint': '(optional)'
+                },
+                {
+                    'Key': 'NetworkMAC',
+                    'Value': '',
+                    'Hint': '(optional)'
+                },
+                {
+                    'Key': 'NetworkID',
+                    'Value': '',
+                    'Hint': '(optional)'
+                }
+            ]
+        }];
     }
 
     DeviceService.prototype = {
@@ -42,9 +66,6 @@ orgEdgexFoundry.deviceService = (function() {
         renderServiceAddressable: null,
         refreshDeviceService: null,
         hideServiceAddressablePanel: null,
-
-        renderListProfile: null,
-        renderListDS: null,
 
         loadDevice: null,
         renderDevice: null,
@@ -62,6 +83,8 @@ orgEdgexFoundry.deviceService = (function() {
         setProtocol: null,
         getProtocolFormValue: null,
         removeProtocolField: null,
+        fillProtocolFields: null,
+        setProtocolSelectEvent: null,
 
         loadDeviceProfile: null,
         renderDeviceProfile: null,
@@ -71,44 +94,56 @@ orgEdgexFoundry.deviceService = (function() {
         refreshProfile: null,
         cancelAddDeviceProfile: null,
         onSelectFileCompleted: null,
-    }
+    };
 
     var deviceService = new DeviceService();
 
     DeviceService.prototype.removeProtocolField = function(deviceProtocolFieldKey) {
-        delete deviceService.deviceProtocols.deviceProtocolName[deviceProtocolFieldKey];
+        delete deviceService.deviceProtocols[deviceProtocolFieldKey];
         $(".edgexfoundry-device-protocols input[name=\'" + deviceProtocolFieldKey + "\']").parent(".protocol-field").remove();
-    }
+    };
 
     DeviceService.prototype.getProtocolFormValue = function() {
-        var protocolFields = Object.entries(deviceService.deviceProtocols.deviceProtocolName);
+        var protocolFields = Object.entries(deviceService.deviceProtocols);
+        // edited
         var protocols = {};
-        var protocolName = $(".edgexfoundry-device-protocols input[name='deviceProtocolName']").val().trim();
+        var protocolName = $("#deviceProtocolNameSelect").val().trim();
+
         protocols[protocolName] = {};
         for (var i = 0; i < protocolFields.length; i++) {
             var fieldKey = $(".edgexfoundry-device-protocols input[name=\'" + protocolFields[i][0] + "\']").val().trim();
             var fieldValue = $(".edgexfoundry-device-protocols input[name=\'" + protocolFields[i][1] + "\']").val().trim();
-            protocols[protocolName][fieldKey] = fieldValue;
+            if (fieldKey != "") {
+                protocols[protocolName][fieldKey] = fieldValue;
+            }
         }
-
         return protocols;
-    }
+    };
 
     DeviceService.prototype.setProtocol = function(protocols) {
         var deviceProtocolName = Object.keys(protocols)[0];
         var protocolFields = Object.entries(protocols[deviceProtocolName]);
-
-        for (var i = 1; i < protocolFields.length; i++) {
-            deviceService.addProtocolField();
-        }
-
-        $(".edgexfoundry-device-protocols input[name='deviceProtocolName']").val(deviceProtocolName);
-
+        $('#deviceProtocolNameSelect').empty();
+        $.each(deviceService.deviceProtocolsPropertiesTemplate, function(k, v) {
+            $('#deviceProtocolNameSelect').append($('<option>', {
+                value: v['Protocol'],
+                text: v['Alias'],
+            }));
+            if (v['Protocol'] == deviceProtocolName) {
+                $('#deviceProtocolNameSelect').val(deviceProtocolName);
+            }
+        });
+        deviceService.setProtocolSelectEvent();
+        var protocolProperties = [];
         for (var i = 0; i < protocolFields.length; i++) {
-            $(".edgexfoundry-device-protocols  input[name='deviceProtocolFieldKey-" + i + "']").val(protocolFields[i][0]);
-            $(".edgexfoundry-device-protocols  input[name='deviceProtocolFieldValue-" + i + "']").val(protocolFields[i][1]);
+            protocolProperties.push({
+                'Key': protocolFields[i][0],
+                'Value': protocolFields[i][1],
+                'Hint': '',
+            })
         }
-    }
+        deviceService.fillProtocolFields(protocolProperties);
+    };
 
     DeviceService.prototype.resetProtocol = function() {
         if (deviceService.deviceProtocols == null) {
@@ -117,67 +152,76 @@ orgEdgexFoundry.deviceService = (function() {
         $(".edgexfoundry-device-protocols .protocol-field-collection").empty();
 
         deviceService.deviceProtocols = null;
-    }
+    };
 
     DeviceService.prototype.addProtocol = function() {
-        deviceService.deviceProtocols = {};
-        deviceService.deviceProtocols["deviceProtocolName"] = {};
-        var deviceProtocolFieldKey = "deviceProtocolFieldKey-0";
-        var deviceProtocolFieldValue = "deviceProtocolFieldValue-0";
+        $('#deviceProtocolNameSelect').empty();
+        $.each(deviceService.deviceProtocolsPropertiesTemplate, function(k, v) {
+            $('#deviceProtocolNameSelect').append($('<option>', {
+                value: v['Protocol'],
+                text: v['Alias'],
+            }));
+        });
+        deviceService.setProtocolSelectEvent();
+        $('#deviceProtocolNameSelect').change();
+    };
 
-        deviceService.deviceProtocols.deviceProtocolName[deviceProtocolFieldKey] = deviceProtocolFieldValue;
+    DeviceService.prototype.setProtocolSelectEvent = function() {
+        $('#deviceProtocolNameSelect').on('change', function() {
+            var value = $(this).val();
+            $.each(deviceService.deviceProtocolsPropertiesTemplate, function(i, v) {
+                if (v['Protocol'] == value) {
+                    deviceService.fillProtocolFields(v['Properties']);
+                    return false;
+                }
+            });
+        });
+    };
 
-        var field = '<div class="protocol-field" style="margin-bottom:5px;">';
-        field += '<input type="text" class="form-control" style="display:inline!important;" name="' + deviceProtocolFieldKey + '">&nbsp;:&nbsp;';
-        field += '<input type="text" class="form-control" style="display:inline!important;" name="' + deviceProtocolFieldValue + '">';
-        field += '<div class="edgexIconBtn" onclick="orgEdgexFoundry.deviceService.removeProtocolField(\'' + deviceProtocolFieldKey + '\');">';
-        field += '<i class="fa fa-minus-circle fa-lg" aria-hidden="true"></i>';
-        field += '</div>';
-        field += '</div>';
-
-        $(".device-protocol .protocol-body .protocol-field-collection").append(field);
-
-    }
+    DeviceService.prototype.fillProtocolFields = function(protocolProperties) {
+        // edited
+        deviceService.resetProtocol();
+        for (var i = 0; i < protocolProperties.length; i++) {
+            deviceService.addProtocolField({
+                'Key': protocolProperties[i]['Key'],
+                'Value': protocolProperties[i]['Value'],
+                'Hint': protocolProperties[i]['Hint'],
+            });
+        }
+    };
 
     DeviceService.prototype.addProtocolField = function() {
-
-        var fieldKeysArray;
         if (deviceService.deviceProtocols == null) {
-            deviceService.addProtocol();
-            fieldKeysArray = Object.keys(deviceService.deviceProtocols["deviceProtocolName"]);
-        } else {
-            fieldKeysArray = Object.keys(deviceService.deviceProtocols["deviceProtocolName"]);
+            deviceService.deviceProtocols = {};
         }
-
+        var fieldKeysArray = Object.keys(deviceService.deviceProtocols);
         var deviceProtocolFieldKey = "deviceProtocolFieldKey-" + fieldKeysArray.length;
         var deviceProtocolFieldValue = "deviceProtocolFieldValue-" + fieldKeysArray.length;
-
-        deviceService.deviceProtocols.deviceProtocolName[deviceProtocolFieldKey] = deviceProtocolFieldValue;
-
-        var field = '<div class="protocol-field" style="margin-bottom:5px;">';
-        field += '<input type="text" class="form-control" style="display:inline!important;" name="' + deviceProtocolFieldKey + '">&nbsp;:&nbsp;';
-        field += '<input type="text" class="form-control" style="display:inline!important;" name="' + deviceProtocolFieldValue + '">';
-        field += '<div class="edgexIconBtn" onclick="orgEdgexFoundry.deviceService.removeProtocolField(\'' + deviceProtocolFieldKey + '\');">';
-        field += '<i class="fa fa-minus-circle fa-lg" aria-hidden="true"></i>';
-        field += '</div>';
-        field += '</div>';
-
+        var deviceProtocolFieldHint = "deviceProtocolFieldHint-" + fieldKeysArray.length;
+        deviceService.deviceProtocols[deviceProtocolFieldKey] = deviceProtocolFieldValue;
+        if (arguments.length > 0) {
+            var field = '<div class="protocol-field" style="margin-bottom:5px;">';
+            field += '<input type="text" class="form-control" style="display:inline!important;" value="' + arguments[0]['Key'] + '" name="' + deviceProtocolFieldKey + '">&nbsp;:&nbsp;';
+            field += '<input type="text" class="form-control" style="display:inline!important;" value="' + arguments[0]['Value'] + '" name="' + deviceProtocolFieldValue + '">';
+            field += '<label class="form-control" style="display:inline!important;border:none;" name="' + deviceProtocolFieldHint + '">' + arguments[0]['Hint'] + '</label>';
+            field += '<div class="edgexIconBtn" onclick="orgEdgexFoundry.deviceService.removeProtocolField(\'' + deviceProtocolFieldKey + '\');">';
+            field += '<i class="fa fa-minus-circle fa-lg" aria-hidden="true"></i>';
+            field += '</div>';
+            field += '</div>';
+        } else {
+            var field = '<div class="protocol-field" style="margin-bottom:5px;">';
+            field += '<input type="text" class="form-control" style="display:inline!important;" name="' + deviceProtocolFieldKey + '">&nbsp;:&nbsp;';
+            field += '<input type="text" class="form-control" style="display:inline!important;" name="' + deviceProtocolFieldValue + '">';
+            field += '<label class="form-control" style="display:inline!important;border:none;" name="' + deviceProtocolFieldHint + '"></label>';
+            field += '<div class="edgexIconBtn" onclick="orgEdgexFoundry.deviceService.removeProtocolField(\'' + deviceProtocolFieldKey + '\');">';
+            field += '<i class="fa fa-minus-circle fa-lg" aria-hidden="true"></i>';
+            field += '</div>';
+            field += '</div>';
+        }
         $(".device-protocol .protocol-body .protocol-field-collection").append(field);
-
-    }
+    };
 
     // =======device service start
-    // =======device service start
-    DeviceService.prototype.renderListDS = function() {
-        // render list option select DS in Add Object		        
-        var $el = $("#idSelectDSInAddObject");
-        $el.empty(); // remove old options        
-        $.each(deviceService.dsListCache, function(i, s) {
-            $el.append($("<option></option>")
-                .attr("value", s).text(s));
-        });
-    }
-
     DeviceService.prototype.loadDeviceService = function() {
         $.ajax({
             url: '/core-metadata/api/v1/deviceservice',
@@ -189,12 +233,6 @@ orgEdgexFoundry.deviceService = (function() {
                     return;
                 }
                 deviceService.renderDeviceService(data);
-
-                deviceService.dsListCache.length = 0;
-                $.each(data, function(i, s) {
-                    deviceService.dsListCache.push(s.name);
-                    deviceService.renderListDS();
-                });
             },
             statusCode: {
 
@@ -204,6 +242,7 @@ orgEdgexFoundry.deviceService = (function() {
 
     DeviceService.prototype.renderDeviceService = function(deviceServices) {
         $("#edgexfoundry-device-service-list table tbody").empty();
+        deviceService.allDeviceServiceNameList = deviceServices.map(obj => { return obj.name });
         $.each(deviceServices, function(i, v) {
             var rowData = "<tr>";
             rowData += "<td>" + (i + 1) + "</td>";
@@ -214,7 +253,7 @@ orgEdgexFoundry.deviceService = (function() {
             rowData += '<td class="device-service-addressable-search-icon"><input type="hidden" value=\'' + JSON.stringify(v.addressable) + '\'>' + '<i class="fa fa-search-plus fa-lg"></i>' + '</td>';
             rowData += "<td>" + v.operatingState + "</td>";
             rowData += "<td>" + v.adminState + "</td>";
-            rowData += '<td class="device-service-devices-inlcuded-icon"><input type="hidden" value=\'' + v.name + '\'>' + '<i class="fa fa-sitemap fa-lg"></i>' + '</td>';
+            rowData += '<td class="device-service-devices-included-icon"><input type="hidden" value=\'' + v.name + '\'>' + '<i class="fa fa-sitemap fa-lg"></i>' + '</td>';
             rowData += "<td>" + dateToString(v.created) + "</td>";
             rowData += "<td>" + dateToString(v.modified) + "</td>";
             rowData += "</tr>";
@@ -226,7 +265,7 @@ orgEdgexFoundry.deviceService = (function() {
             $(".device-service-addressable").show();
         });
 
-        $(".device-service-devices-inlcuded-icon").on('click', function() {
+        $(".device-service-devices-included-icon").on('click', function() {
             var serviceName = $(this).children('input[type="hidden"]').val();
             deviceService.selectedDeviceServiceName = serviceName;
             deviceService.loadDevice(serviceName);
@@ -341,24 +380,41 @@ orgEdgexFoundry.deviceService = (function() {
 
     DeviceService.prototype.editDevice = function(device) {
         deviceService.resetProtocol();
+        // edited
+        deviceService.currentProtocols = device.protocols;
+
         deviceService.setProtocol(device.protocols);
 
         $(".edgexfoundry-device-update-or-add .add-device").hide();
         $(".edgexfoundry-device-update-or-add .update-device").show();
-
-        $("select[name='nameSelectDSInAddObject']").prop('disabled', true);
-        $('#idSelectDSInAddObject option').removeAttr('selected').filter('[value=\'' + device.service.name + '\']').attr('selected', true);
-        $("#device-update-or-add .edgexfoundry-device-form input[name='deviceServiceName']").attr('value', device.service.name);
-        $("#device-update-or-add .edgexfoundry-device-form input[name='deviceServiceName']").prop('disabled', true);
-
-        $(".edgexfoundry-device-form input[name='deviceServiceName']").val(device.service.name);
+        $('#deviceServiceNameSelect').empty();
+        //deviceService select
+        $.each(deviceService.allDeviceServiceNameList, function(i, item) {
+            $('#deviceServiceNameSelect').append($('<option>', {
+                value: item,
+                text: item
+            }));
+            if (item == device.service.name) {
+                $("#deviceServiceNameSelect").val(item);
+            }
+        });
+        //deviceProfile select
+        $('#deviceProfileNameSelect').empty();
+        $.each(deviceService.allDeviceProfileNameList, function(i, item) {
+            $('#deviceProfileNameSelect').append($('<option>', {
+                value: item,
+                text: item
+            }));
+            if (item == device.profile.name) {
+                $("#deviceProfileNameSelect").val(item);
+            }
+        });
         $(".edgexfoundry-device-form input[name='deviceID']").val(device.id);
         $(".edgexfoundry-device-form input[name='deviceName']").val(device.name);
         $(".edgexfoundry-device-form input[name='deviceDescription']").val(device.description);
         $(".edgexfoundry-device-form input[name='deviceLabels']").val(device.labels ? device.labels.join(',') : "");
         $(".edgexfoundry-device-form input[name='deviceAdminState']").val(device.adminState);
         $(".edgexfoundry-device-form input[name='deviceOperatingState']").val(device.operatingState);
-        $(".edgexfoundry-device-form input[name='deviceProfile']").val(device.profile.name);
 
         $("#edgexfoundry-device-list").hide();
         $("#edgexfoundry-device-main .edgexfoundry-device-update-or-add").show();
@@ -366,26 +422,35 @@ orgEdgexFoundry.deviceService = (function() {
 
     DeviceService.prototype.addDevice = function() {
         deviceService.resetProtocol();
+        // edited  
+        deviceService.currentProtocols = {};
+
         deviceService.addProtocol();
-        deviceService.refreshProfile();
-        deviceService.refreshDeviceService();
-
-        $(".edgexfoundry-device-form")[0].reset();
-
-        $("select[name='nameSelectDSInAddObject']").prop('disabled', false);
-        $("select[name='nameSelectDSInAddObject']").val("");
-
+        $('#deviceServiceNameSelect').empty();
+        $.each(deviceService.allDeviceServiceNameList, function(i, item) {
+            $('#deviceServiceNameSelect').append($('<option>', {
+                value: item,
+                text: item
+            }));
+        });
+        $('#deviceProfileNameSelect').empty();
+        $.each(deviceService.allDeviceProfileNameList, function(i, item) {
+            $('#deviceProfileNameSelect').append($('<option>', {
+                value: item,
+                text: item
+            }));
+        });
         $("#edgexfoundry-device-list").hide();
         $("#edgexfoundry-device-main .edgexfoundry-device-update-or-add").show();
         $(".edgexfoundry-device-update-or-add .update-device").hide();
         $(".edgexfoundry-device-update-or-add .add-device").show();
-
-    }
+        $(".edgexfoundry-device-form")[0].reset();
+    };
 
     DeviceService.prototype.cancelAddOrUpdateDevice = function() {
         $("#edgexfoundry-device-list").show();
         $("#edgexfoundry-device-main .edgexfoundry-device-update-or-add").hide();
-    }
+    };
 
     DeviceService.prototype.uploadDevice = function(type) {
         var method;
@@ -395,10 +460,15 @@ orgEdgexFoundry.deviceService = (function() {
             method = "PUT"
         }
         //debugger
+        var protocols = deviceService.getProtocolFormValue();
+
+        // edited
+        var protocolName = $("#deviceProtocolNameSelect").val().trim();
+        deviceService.currentProtocols[protocolName] = protocols[protocolName];
+
         var device = {
             service: {
-                // name: $(".edgexfoundry-device-form input[name='deviceServiceName']").val().trim(),
-                name: $("select[name='nameSelectDSInAddObject']").val().trim(),
+                name: $("#deviceServiceNameSelect").val(),
             },
             id: $(".edgexfoundry-device-form input[name='deviceID']").val(),
             name: $(".edgexfoundry-device-form input[name='deviceName']").val().trim(),
@@ -406,19 +476,19 @@ orgEdgexFoundry.deviceService = (function() {
             labels: $(".edgexfoundry-device-form input[name='deviceLabels']").val().split(','),
             adminState: $(".edgexfoundry-device-form select[name='deviceAdminState']").val(),
             operatingState: $(".edgexfoundry-device-form select[name='deviceOperatingState']").val(),
+            protocols: deviceService.currentProtocols,
             profile: {
-                // name: $(".edgexfoundry-device-form input[name='deviceProfile']").val().trim(),
-                name: $("select[name='nameSelectProfileInAddObject']").val(),
+                name: $("#deviceProfileNameSelect").val(),
             }
-        }
-
-        device['protocols'] = deviceService.getProtocolFormValue();
+        };
 
         $.ajax({
             url: '/core-metadata/api/v1/device',
             type: method,
+            contentType: 'application/json',
             data: JSON.stringify(device),
             success: function() {
+                deviceService.cancelAddOrUpdateDevice();
                 deviceService.refreshDevice();
                 bootbox.alert({
                     message: "commit success!",
@@ -536,7 +606,6 @@ orgEdgexFoundry.deviceService = (function() {
                     var p = $('.edgexfoundry-device-command table tbody input[name="' + param + command.id + '"]').val();
                     paramBody[param] = p;
                 });
-                console.log(JSON.stringify(paramBody))
                 $.ajax({
                     url: cmdUrl,
                     type: 'PUT',
@@ -584,12 +653,6 @@ orgEdgexFoundry.deviceService = (function() {
                 }
                 deviceService.renderDeviceProfile(data);
                 $(".edgexfoundry-device-profile-main table tfoot").hide();
-
-                deviceService.profileListCache.length = 0;
-                $.each(data, function(i, s) {
-                    deviceService.profileListCache.push(s.name);
-                    deviceService.renderListProfile();
-                });
             },
             statusCode: {
 
@@ -597,18 +660,9 @@ orgEdgexFoundry.deviceService = (function() {
         });
     }
 
-    DeviceService.prototype.renderListProfile = function() {
-        // render list option select Profile in Add Object		        
-        var $el = $("#idSelectProfileInAddObject");
-        $el.empty(); // remove old options        
-        $.each(deviceService.profileListCache, function(i, s) {
-            $el.append($("<option></option>")
-                .attr("value", s).text(s));
-        });
-    }
-
     DeviceService.prototype.renderDeviceProfile = function(deviceprofiles) {
         $(".edgexfoundry-device-profile-main table tbody").empty();
+        deviceService.allDeviceProfileNameList = deviceprofiles.map(obj => { return obj.name });
         $.each(deviceprofiles, function(i, v) {
             var rowData = "<tr>";
             rowData += '<td class="deviceprofile-delete-icon"><input type="hidden" value=\'' + v.id + '\'><div class="edgexIconBtn"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i> </div></td>';
@@ -689,33 +743,39 @@ orgEdgexFoundry.deviceService = (function() {
 
     DeviceService.prototype.uploadProfile = function() {
         $("#add-profile-panel").hide();
-
-        var form = $("#add-profile-panel form")[0];
-        form.action = "/core-metadata/api/v1/deviceprofile/uploadfile?X-Session-Token=" + window.sessionStorage.getItem('X_Session_Token');
-        form.method = "POST"
-        form.enctype = "multipart/form-data"
-        form.submit();
-        var iframe = $("#add-profile-panel iframe")[0];
-        iframe.onload = function(event) {
-            var doc = iframe.contentDocument;
-            var response = $(doc).find('body').html();
-            var result = response.match("code");
-            if (result != null || $(doc).find('body').find("h1").length != 0) {
-                bootbox.alert({
-                    title: "Error",
-                    message: "upload profile failed !",
-                    className: 'red-green-buttons'
-                });
-            } else {
-                form.reset();
-                bootbox.alert({
-                    message: "upload success !",
-                    className: 'red-green-buttons'
-                });
-                orgEdgexFoundry.deviceService.loadDeviceProfile();
+        var formData = new FormData($("#add-profile-panel form")[0]);
+        var reqUrl = "/core-metadata/api/v1/deviceprofile/uploadfile?X-Session-Token=" + window.sessionStorage.getItem('X_Session_Token');
+        $.ajax({
+            url: reqUrl,
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            complete: function(jqXHR, textStatus) {
+                if (jqXHR.status == 200) {
+                    bootbox.alert({
+                        message: "Upload device profile success !",
+                        className: 'red-green-buttons'
+                    });
+                    orgEdgexFoundry.deviceService.loadDeviceProfile();
+                } else if (jqXHR.status == 409) {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "Duplicate profile name !",
+                        className: 'red-green-buttons'
+                    });
+                } else {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "Upload failure !",
+                        className: 'red-green-buttons'
+                    });
+                }
             }
-        }
-    }
+        });
+    };
 
     DeviceService.prototype.onSelectFileCompleted = function() {
         var uploadInput = $("#add-profile-action")
