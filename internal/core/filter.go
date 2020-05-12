@@ -22,16 +22,11 @@ import (
 	"strings"
 
 	"github.com/phanvanhai/cloud-ui-go/internal/configs"
-	"github.com/phanvanhai/cloud-ui-go/internal/domain"
-	"github.com/phanvanhai/cloud-ui-go/internal/repository"
 )
 
 const (
 	RootURIPath = "/"
 )
-
-//{Token:User}
-var TokenCache = make(map[string]domain.User, 20)
 
 func GeneralFilter(h http.Handler) http.Handler {
 	authFilter := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -44,11 +39,6 @@ func AuthFilter(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 
-		if path == LoginUriPath || path == UserCreaterUriPath {
-			h.ServeHTTP(w, r)
-			return
-		}
-
 		if strings.HasSuffix(path, HtmlSuffix) ||
 			strings.HasSuffix(path, CssSuffix) ||
 			strings.HasSuffix(path, JsSuffix) ||
@@ -57,12 +47,6 @@ func AuthFilter(h http.Handler) http.Handler {
 			strings.HasPrefix(path, DataPathPrefix) {
 
 			http.FileServer(http.Dir(configs.ServerConf.StaticResourcesPath)).ServeHTTP(w, r)
-			return
-		}
-
-		users, _ := repository.GetUserRepos().SelectAll()
-		if len(users) == 0 && path != UserCreaterHtmlPage {
-			http.Redirect(w, r, UserCreaterHtmlPage, http.StatusTemporaryRedirect)
 			return
 		}
 
@@ -80,19 +64,6 @@ func AuthFilter(h http.Handler) http.Handler {
 		} else {
 			token = r.Header.Get(SessionTokenKey)
 		}
-
-		// _, isValid := TokenCache[token]
-
-		// if (token == "") || !(isValid) {
-		// 	if r.Header.Get(AjaxRequestHeader) != "" &&
-		// 		r.Header.Get(AjaxRequestHeader) == AjaxRequestIdentifier {
-		// 		w.WriteHeader(RedirectHttpCode)
-		// 		w.Write([]byte(NoAuthorizationMsg))
-		// 		return
-		// 	}
-		// 	http.Redirect(w, r, LoginHtmlPage, RedirectHttpCode)
-		// 	return
-		// }
 
 		for prefix := range configs.ProxyMapping {
 			if strings.HasPrefix(path, prefix) {

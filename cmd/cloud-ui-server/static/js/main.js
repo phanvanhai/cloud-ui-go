@@ -47,31 +47,6 @@ $(document).ready(function() {
         }
     });
 
-    //logout control
-    $(".headbar li.logout").on("click", function() {
-        $.ajax({
-            url: '/api/v1/auth/logout?ran=' + Math.random(),
-            type: 'GET',
-            success: function() {
-                window.location.href = '/login.html?ran=' + Math.random();
-            }
-        });
-    });
-
-    //user information control
-    $(".headbar li.user").on("click", function() {
-        $(".main_msgbox").load("/pages/userInfo.html")
-        $(".main_msgbox").animate({ "right": "0" }, "fast");
-        $(".main_shelter").show("fast");
-    });
-
-    //notification control
-    $(".headbar li.notification").on("click", function() {
-        // $(".main_msgbox").load("")
-        // $(".main_msgbox").animate({"right":"0"},"fast");
-        // $(".main_shelter").show("fast");
-    });
-
     //globe shelter control
     $(".main_shelter").on("click", function() {
         $(".main_shelter").hide("fast");
@@ -115,16 +90,6 @@ $(document).ready(function() {
                 return;
             }
 
-            //if no select one gateway instance,not load other resource.
-            if (window.sessionStorage.getItem('selectedGateway') == null) {
-                //alert('please select a gateway instance firstly!');
-                bootbox.alert({
-                    title: "Alert",
-                    message: "Please select or create a gateway firstly !",
-                    className: 'red-green-buttons'
-                });
-                return;
-            };
             // $(".sidebar li").not($(this)).css({color:'',borderBottom: '',borderBottomColor:''});
             // $(this).css({color:'#339933',borderBottom: '2px solid',borderBottomColor:'#339933'});
             $(".sidebar li").not($(this)).css({ color: '', borderBottom: '', borderBottomColor: '', backgroundColor: '' });

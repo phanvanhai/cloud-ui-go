@@ -26,7 +26,6 @@ import (
 	"github.com/phanvanhai/cloud-ui-go/internal/core"
 	"github.com/phanvanhai/cloud-ui-go/internal/messagebus"
 	"github.com/phanvanhai/cloud-ui-go/internal/pkg/usage"
-	"github.com/phanvanhai/cloud-ui-go/internal/repository/mm"
 )
 
 func main() {
@@ -44,7 +43,6 @@ func main() {
 		return
 	}
 
-	mm.DBConnect()
 	r := internal.InitRestRoutes()
 	err = messagebus.Initialize(configs.GetConfig())
 	if err != nil {

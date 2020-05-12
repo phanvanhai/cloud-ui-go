@@ -1,5 +1,5 @@
 [Service]
-Host = "edgex-ui-go"
+Host = "cloud-ui-go"
 Port = 4000
 Labels = []
 OpenMsg = "edgeX ui started"

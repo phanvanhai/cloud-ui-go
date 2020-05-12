@@ -29,22 +29,7 @@ func InitRestRoutes() http.Handler {
 
 	s := r.PathPrefix("/api/v1").Subrouter()
 	s.HandleFunc("/request/{service}/{path}", messagebus.ProxyHandler)
-	s.HandleFunc("/ping", ping).Methods(http.MethodGet)
-	s.HandleFunc("/user", handler.AddUser).Methods(http.MethodPost)
-	s.HandleFunc("/auth/login", handler.Login).Methods(http.MethodPost)
-	s.HandleFunc("/auth/logout", handler.Logout).Methods(http.MethodGet)
-
-	s.HandleFunc("/gateway", handler.QueryAllGateway).Methods(http.MethodGet)
-	s.HandleFunc("/gateway", handler.AddGateway).Methods(http.MethodPost)
-	s.HandleFunc("/gateway/{id}", handler.RemoveGateway).Methods(http.MethodDelete)
-	s.HandleFunc("/gateway/proxy", handler.ProxyConfigGateway).Methods(http.MethodPost)
-
 	s.HandleFunc("/profile/download", handler.DowloadProfile).Methods(http.MethodGet)
 
 	return r
-}
-
-func ping(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/plain")
-	w.Write([]byte("pong"))
 }

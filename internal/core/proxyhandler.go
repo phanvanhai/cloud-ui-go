@@ -33,15 +33,12 @@ const (
 	ForwardedHostReqHeader = "X-Forwarded-Host"
 )
 
-//target ProxyCache {token:targetIP}
-var DynamicProxyCache = make(map[string]string, 10)
-
 func ProxyHandler(w http.ResponseWriter, r *http.Request, path string, prefix string, token string) {
 	defer r.Body.Close()
 
 	port := configs.GetConfig().Server.Port
 	portStr := strconv.FormatInt(port, 10)
-	targetIP := DynamicProxyCache[token]
+	targetIP := configs.GetConfig().Server.Host
 	targetAddr := HttpProtocol + "://" + targetIP + ":" + portStr
 
 	service := ""

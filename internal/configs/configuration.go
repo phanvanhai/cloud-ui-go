@@ -30,7 +30,6 @@ const (
 
 var (
 	ServerConf    Service
-	DBConf        Database
 	ProxyConf     DynamicProxy
 	ProxyMapping  map[string]string
 	CurrentConfig *Config
@@ -44,9 +43,9 @@ type BindingInfo struct {
 }
 
 type Config struct {
-	Server Service      `toml:"Service"`
-	DB     Database     `toml:"Database"`
-	Proxy  DynamicProxy `toml:"DynamicProxy"`
+	Server Service `toml:"Service"`
+	// DB     Database     `toml:"Database"`
+	Proxy DynamicProxy `toml:"DynamicProxy"`
 	// MessageBus
 	MessageBus types.MessageBusConfig
 	// Binding
@@ -65,17 +64,6 @@ type Service struct {
 type Scheme struct {
 	User    string
 	Gateway string
-}
-
-type Database struct {
-	Host     string
-	Name     string
-	Port     int64
-	Username string
-	Password string
-	Timeout  int64
-	Type     string
-	Scheme   Scheme
 }
 
 type DynamicProxy struct {
@@ -129,7 +117,6 @@ func LoadConfig(confFilePath string) error {
 		return err
 	}
 	ServerConf = conf.Server
-	DBConf = conf.DB
 	ProxyConf = conf.Proxy
 	initProxyMapping()
 	CurrentConfig = &conf
