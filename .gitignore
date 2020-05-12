@@ -1,0 +1,10 @@
+.idea/
+vendor
+*.exe
+go.sum
+*.DS_Store
+cmd/cloud-ui-server/cloud-ui-server
+*.snap
+prime/
+squashfs-root/
+coverage.out
