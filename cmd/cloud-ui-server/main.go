@@ -50,17 +50,14 @@ func main() {
 		return
 	}
 
-	http.DefaultClient.Timeout = time.Minute * 10
 	server := &http.Server{
 		Handler:      core.GeneralFilter(r),
 		Addr:         ":" + strconv.FormatInt(configs.ServerConf.Port, 10),
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
-		IdleTimeout:  120 * time.Second,
 	}
-	server.SetKeepAlivesEnabled(false)
 
-	log.Println("EdgeX UI Server Listen On " + server.Addr)
+	log.Println("Cloud UI Server Listen On " + server.Addr)
 
 	log.Fatal(server.ListenAndServe())
 }

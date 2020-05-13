@@ -628,7 +628,7 @@ orgEdgexFoundry.deviceService = (function() {
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val(JSON.stringify(data));
+                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val(JSON.stringify(data.readings[0].value));
                         $('#' + command.id + '').prop('disabled', false);
                     },
                     error: function() {
