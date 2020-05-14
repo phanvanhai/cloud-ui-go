@@ -1,8 +1,9 @@
-#add_new_gateway{
+#add_new_gateway {
     display: none;
     position: relative;
     margin-top: 40px;
 }
+
 #add_new_gateway form {
     width: 800px;
     position: relative;
