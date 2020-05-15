@@ -75,9 +75,6 @@ orgEdgexFoundry.supportScheduler = (function() {
                     $("#edgex-support-scheduler-list table tfoot").show();
                     return
                 }
-                if (data) {
-                    scheduler.schedulerNameList = data.map(obj => { return obj.name });
-                }
                 scheduler.renderSchedulerList(data);
             },
             error: function() {
@@ -560,7 +557,6 @@ orgEdgexFoundry.supportScheduler = (function() {
                 url: '/core-command/api/v1/device/' + deviceID,
                 type: 'GET',
                 dataType: 'json',
-                dataType: "json",
             }).done(function(device) {
                 var ScheduleEventServiceActionValue = queryTargetActionName(device, updateConfig);
                 $(".edgex-support-scheduleevent-form select[name = 'ScheduleEventServiceAction']").append($('<option>', {
@@ -636,7 +632,6 @@ orgEdgexFoundry.supportScheduler = (function() {
             url: '/core-command/api/v1/device',
             type: 'GET',
             dataType: 'json',
-            dataType: "json",
         }).done(function(devices) {
             if (!devices || devices.length == 0) {
                 return;

@@ -649,7 +649,7 @@ orgEdgexFoundry.supportNotification = (function() {
     SupportNotification.prototype.seacrchTransmissionBtn = function() {
         var start = $("#edgex-foundry-support-transmission input[name='transmission_start_time']").val();
         var end = $("#edgex-foundry-support-transmission input[name='transmission_end_time']").val();
-        var limit = $("#edgex-foundry-support-transmissions select[name='transmission_limit']").val();
+        var limit = $("#edgex-foundry-support-transmission select[name='transmission_limit']").val();
         start = new Date(start).valueOf();
         end = new Date(end).valueOf();
         $.ajax({
