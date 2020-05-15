@@ -95,6 +95,7 @@ orgEdgexFoundry.supportNotification = (function() {
         $.ajax({
             url: '/support-notification/api/v1/notification/end/' + end + '/' + 20,
             type: 'GET',
+            dataType: 'json',
             success: function(data) {
                 if (!data || data.length == 0) {
                     $("#edgex-support-notification-list table tfoot").show();
@@ -654,6 +655,7 @@ orgEdgexFoundry.supportNotification = (function() {
         $.ajax({
             url: '/support-notification/api/v1/transmission/start/' + start + "/end/" + end + "/" + limit,
             type: 'GET',
+            dataType: 'json',
             success: function(data) {
                 if (!data || data.length == 0) {
                     $("#edgex-foundry-support-transmission table tfoot").show();
@@ -686,6 +688,7 @@ orgEdgexFoundry.supportNotification = (function() {
         $.ajax({
             url: '/support-notification/api/v1/transmission/end/' + end + '/' + 20,
             type: 'GET',
+            dataType: 'json',
             success: function(data) {
                 if (!data || data.length == 0) {
                     $("#edgex-foundry-support-transmission table tfoot").show();

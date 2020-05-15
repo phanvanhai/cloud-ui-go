@@ -69,6 +69,7 @@ orgEdgexFoundry.supportScheduler = (function() {
         $.ajax({
             url: '/support-scheduler/api/v1/interval',
             type: 'GET',
+            dataType: 'json',
             success: function(data) {
                 if (!data || data.length == 0) {
                     $("#edgex-support-scheduler-list table tfoot").show();
@@ -373,6 +374,7 @@ orgEdgexFoundry.supportScheduler = (function() {
         $.ajax({
             url: '/support-scheduler/api/v1/intervalaction',
             type: 'GET',
+            dataType: 'json',
             success: function(data) {
                 if (!data || data.length == 0) {
                     $("#edgex-support-scheduleevent-list table tfoot").show();
@@ -557,6 +559,7 @@ orgEdgexFoundry.supportScheduler = (function() {
             $.ajax({
                 url: '/core-command/api/v1/device/' + deviceID,
                 type: 'GET',
+                dataType: 'json',
                 dataType: "json",
             }).done(function(device) {
                 var ScheduleEventServiceActionValue = queryTargetActionName(device, updateConfig);
@@ -632,6 +635,7 @@ orgEdgexFoundry.supportScheduler = (function() {
         $.ajax({
             url: '/core-command/api/v1/device',
             type: 'GET',
+            dataType: 'json',
             dataType: "json",
         }).done(function(devices) {
             if (!devices || devices.length == 0) {
