@@ -16,4 +16,9 @@
     "url": "/pages/notification.html",
     "icon": "fa fa-envelope",
     "children": []
+}, {
+    "title": "RuleEngine",
+    "url": "/pages/ruleengine.html",
+    "icon": "fa fa-wrench",
+    "children": []
 }]

@@ -53,7 +53,7 @@ func main() {
 	server := &http.Server{
 		Handler:      core.GeneralFilter(r),
 		Addr:         ":" + strconv.FormatInt(configs.ServerConf.Port, 10),
-		WriteTimeout: 15 * time.Second,
+		WriteTimeout: 45 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 
