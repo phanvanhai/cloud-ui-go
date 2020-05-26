@@ -342,9 +342,29 @@ orgEdgexFoundry.deviceService = (function() {
                 rowData += "<td>" + "</td>";
             }
 
-            // rowData += '<td class="device-addressable-icon"><input type="hidden" value=\''+JSON.stringify(v.addressable)+'\'>' + '<i class="fa fa-eye fa-lg"></i>' + '</td>';
+            var enableCommand = 0;
+            var general_protocol = v.protocols['General'];
+            if (general_protocol != null) {
+                var object_type = general_protocol['Type'];
+                var netID = general_protocol["NetworkID"];
+                if ((object_type == 'Device' || object_type == 'Group') && (netID == "")) {
+                    if (v.operatingState == 'DISABLED') {
+                        enableCommand = 1;
+                    } else {
+                        enableCommand = 2;
+                    }
+                }
+            }
 
-            rowData += '<td class="device-command-icon"><input type="hidden" value=\'' + v.id + '\'>' + '<i class="fa fa-terminal fa-lg"></i>' + '</td>';
+            // rowData += '<td class="device-addressable-icon"><input type="hidden" value=\''+JSON.stringify(v.addressable)+'\'>' + '<i class="fa fa-eye fa-lg"></i>' + '</td>';
+            if (enableCommand == 0) {
+                rowData += '<td class="device-command-icon"><input type="hidden" value=\'' + v.id + '\'>' + '<i class="fa fa-terminal fa-lg"></i>' + '</td>';
+            } else if (enableCommand == 1) {
+                rowData += '<td >' + '<i class="fa fa-ban fa-lg" style="color: red;">Unprovisioned</i>' + '</td>';
+            } else {
+                rowData += '<td >' + '<i class="fa fa-hourglass-half fa-lg" style="color: tomato;">Provisioning...</i>' + '</td>';
+            }
+
             rowData += "<td>" + v.profile.name + "</td>";
             rowData += "<td>" + v.operatingState + "</td>";
             rowData += "<td>" + v.adminState + "</td>";

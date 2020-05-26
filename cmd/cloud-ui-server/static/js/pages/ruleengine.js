@@ -391,14 +391,10 @@ orgEdgexFoundry.supportRuleEngine = (function() {
             type: 'POST',
             data: JSON.stringify(newRule),
             contentType: 'application/json',
-            success: function() {
-                $("#rule-add-new").hide();
-                $("#rule-view").hide();
-                $("#rule-engine-list").show();
-                ruleEngine.loadRuleData();
-            },
             complete: function(xhr, textStatus) {
-                alert(xhr.responseText);
+                var response = JSON.stringify(xhr.responseText);
+                response = response.substring(response.search("Error") + 5);
+                alert(response);
                 $("#rule-add-new").hide();
                 $("#rule-view").hide();
                 $("#rule-engine-list").show();
