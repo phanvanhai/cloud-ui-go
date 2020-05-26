@@ -588,7 +588,7 @@ orgEdgexFoundry.deviceService = (function() {
             rowData += '<td>' + v.name + '</td>';
 
             rowData += '<td>'
-            if (v.get != null) {
+            if (v.get && v.get.responses) {
                 rowData += '<input type="radio"  name="commandRadio_' + v.id + '" checked value="get" style="width:20px;">&nbsp;get';
             }
             if (v.put && v.put.parameterNames) {
@@ -603,7 +603,6 @@ orgEdgexFoundry.deviceService = (function() {
             if (v.put != null) {
                 rowData += '<br>';
                 $.each(v.put.parameterNames, function(i, p) {
-                    // rowData += p + '&nbsp;<input type="text" class="form-control" name="' + p + v.id + '" style="width:200px;display:inline;">&nbsp;'
                     rowData += '<div>' + p + '<br><input type="text" class="form-control" name="' + p + v.id + '" style="width:500px;display:inline;"></div>'
                 });
             }
