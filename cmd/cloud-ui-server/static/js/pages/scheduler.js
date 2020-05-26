@@ -75,6 +75,9 @@ orgEdgexFoundry.supportScheduler = (function() {
                     $("#edgex-support-scheduler-list table tfoot").show();
                     return
                 }
+                $.each(data, function(i, v) {
+                    scheduler.schedulerNameList.push(v.name);
+                });
                 scheduler.renderSchedulerList(data);
             },
             error: function() {
