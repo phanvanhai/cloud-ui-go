@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/userMqttService.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="config-container" id="mqtt-config">
+        <div>
+            <button onclick="orgEdgexFoundry.userMqtt.getConfig()">Get Config</button>
+            <!-- <button onclick="orgEdgexFoundry.userMqtt.connectMqtt()">Update Config</button> -->
+        </div>
+        <div class="config-title">Mqtt Config</div>
+        <div class="part-config-container" id="mqtt-client-identifiers">
+            <span class="part-config-tile">Client Identifier</span>
+            <ul class="part-config-ul">
+                <li>Username: <input type="text" id="client-name"></li>
+                <li>Password: <input type="text" id="client-pass"></li>
+                <li>ClientId: <input type="text" id="client-id"></li>
+            </ul>
+        </div>
+        <div class="part-config-container" id="mqtt-connect-imformation">
+            <span class="part-config-tile">Connection information</span>
+            <ul class="part-config-ul">
+                <li>Qos: <select id="connect-qos">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select></li>
+                <li>AutoReconnect: <select id="connect-arc">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select></li>
+                <li>Retained: <select id="connect-retained">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select></li>
+                <li>KeepAlive: <input type="text" id="connect-kal"></textarea>
+                </li>
+                <li>ConnectTimeout: <input type="text" id="connect-ct"></textarea>
+                </li>
+            </ul>
+        </div>
+        <div class="part-config-container" id="mqtt-secure-configuration">
+            <span class="part-config-tile">TLS Setting</span>
+            <ul class="part-config-ul">
+                <li>SkipCertVerify: <select id="sercure-scv">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select></li>
+                <li>KeyPEMBlock: <textarea id="sercure-key"></textarea></li>
+                <li>CertPEMBlock: <textarea id="sercure-cert"></textarea></li>
+            </ul>
+        </div>
+        <div class="part-config-container" id="mqtt-publish-host">
+            <span class="part-config-tile">PublishHost</span>
+            <ul class="part-config-ul">
+                <li>Host: <input type="text" id="publish-host"></textarea>
+                </li>
+                <li>Port: <input type="text" id="publish-port"></textarea>
+                </li>
+                <li>Protocol: <select id="publish-protocol">
+                    <option value="tcp">tcp</option>
+                    <option value="ssl">ssl</option>
+                    <option value="tls">tls</option>
+                </select></li>
+            </ul>
+        </div>
+        <div class="part-config-container" id="mqtt-subscribe-host">
+            <span class="part-config-tile">SubscribeHost</span>
+            <ul class="part-config-ul">
+                <li>Host: <input type="text" id="subscribe-host"></textarea>
+                </li>
+                <li>Port: <input type="text" id="subscribe-port"></textarea>
+                </li>
+                <li>Protocol: <select id="subscribe-protocol">
+                    <option value="tcp">tcp</option>
+                    <option value="ssl">ssl</option>
+                    <option value="tls">tls</option>
+                </select></li>
+            </ul>
+        </div>
+        <div class="part-config-container" id="mqtt-topic">
+            <span class="part-config-tile">Topic Setting</span>
+            <ul class="part-config-ul">
+                <li>Request Topic: <input type="text" id="topic-request"></textarea>
+                </li>
+                <li>Response Topic: <input type="text" id="topic-response"></textarea>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+<script src="/js/userMqttService.js"></script>
+
+</html>

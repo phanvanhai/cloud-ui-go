@@ -17,7 +17,9 @@
 package configs
 
 import (
+	"encoding/json"
 	"log"
+	"net/http"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
@@ -137,4 +139,22 @@ func initProxyMapping() {
 
 func GetConfig() *Config {
 	return CurrentConfig
+}
+
+func GetConfigHandler(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
+	encode(CurrentConfig, w)
+}
+
+func encode(data interface{}, writer http.ResponseWriter) {
+	writer.Header().Add("Content-Type", "application/json")
+
+	enc := json.NewEncoder(writer)
+	err := enc.Encode(data)
+	// Problems encoding
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

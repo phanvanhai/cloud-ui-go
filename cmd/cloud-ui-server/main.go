@@ -47,7 +47,6 @@ func main() {
 	err = messagebus.Initialize(configs.GetConfig())
 	if err != nil {
 		log.Printf("ERROR: Connect MessageBus failed. Error:%v\n", err)
-		return
 	}
 
 	server := &http.Server{

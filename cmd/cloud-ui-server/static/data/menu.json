@@ -21,4 +21,9 @@
     "url": "/pages/ruleengine.html",
     "icon": "fa fa-wrench",
     "children": []
+}, {
+    "title": "Connect",
+    "url": "/pages/userMqttService.html",
+    "icon": "fa fa-wifi",
+    "children": []
 }]

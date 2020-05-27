@@ -1,0 +1,68 @@
+.config-container {
+    margin-top: 20px;
+    margin-left: 30px;
+}
+
+.config-title {
+    font-size: medium;
+    font-weight: lighter;
+    color: blueviolet;
+    font-family: sans-serif;
+}
+
+.part-config-container {
+    margin-top: 10px;
+}
+
+.part-config-tile {
+    font-size: medium;
+    font-weight: lighter;
+    color: green;
+    font-family: sans-serif;
+}
+
+.part-config-ul {
+    margin-top: 10px;
+    display: block;
+}
+
+.part-config-ul li {
+    margin-top: 10px;
+}
+
+.part-config-ul li input {
+    width: 100%;
+    border: 1px solid blue;
+    border-radius: 2px;
+}
+
+.part-config-ul li textarea {
+    width: 100%;
+    height: 300px;
+    overflow: scroll;
+    background-color: rgb(128, 128, 128);
+    color: white;
+}
+
+.config-container button {
+    border-radius: 10px;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 0 20px 20px 0;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.config-container button {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+}
+
+.config-container button:hover {
+    background-color: #4CAF50;
+    color: white;
+}

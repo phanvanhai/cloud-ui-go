@@ -633,13 +633,15 @@ orgEdgexFoundry.deviceService = (function() {
                     contentType: 'application/json',
                     data: JSON.stringify(paramBody),
                     success: function(data) {
-                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val("success");
+                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val(data);
                         $('#' + command.id + '').prop('disabled', false);
                     },
-                    error: function() {
-                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val("failed");
+                    error: function(xhr, status, error) {
+                        alert(error);
+                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val(xhr.responseText);
                         $('#' + command.id + '').prop('disabled', false);
                     }
+
                 });
             } else {
                 var cmdUrl = command.get.url;
@@ -649,11 +651,13 @@ orgEdgexFoundry.deviceService = (function() {
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
+                        console.log("get ok");
                         $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val(JSON.stringify(data.readings[0].value));
                         $('#' + command.id + '').prop('disabled', false);
                     },
-                    error: function() {
-                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val("failed");
+                    error: function(xhr, status, error) {
+                        alert(error);
+                        $('.edgexfoundry-device-command tbody input[name="reading_value' + command.id + '"]').val(xhr.responseText);
                         $('#' + command.id + '').prop('disabled', false);
                     }
                 });
