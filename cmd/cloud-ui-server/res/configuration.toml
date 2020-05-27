@@ -24,8 +24,8 @@ SupportSchedulerPort   = "Scheduler"
 
 [Binding]
 Type="messagebus"
-SubscribeTopic="Response"
-PublishTopic="Request"
+SubscribeTopic="20151214/Response"
+PublishTopic="20151214/Request"
 
 [MessageBus]
 Type = "mqtt"
