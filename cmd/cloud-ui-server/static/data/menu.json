@@ -26,4 +26,9 @@
     "url": "/pages/userMqttService.html",
     "icon": "fa fa-wifi",
     "children": []
+}, {
+    "title": "Util",
+    "url": "/pages/util.html",
+    "icon": "fa fa-briefcase",
+    "children": []
 }]
