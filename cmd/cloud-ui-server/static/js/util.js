@@ -3,6 +3,25 @@ $(document).ready(function() {
     createTable_dimming();
 })
 
+$("#realtime_btn").click(function(e) {
+    e.preventDefault();
+    // var y = $("#realtime_year").val();
+    // var mh = $("#realtime_month").val();
+    var d = $("#realtime_day").val();
+    var h = $("#realtime_hour").val();
+    var m = $("#realtime_min").val();
+    var s = $("#realtime_sec").val();
+
+    var yi = parseInt(y, 10);
+    var mhi = parseInt(mh, 10);
+    var di = parseInt(d, 10);
+    var hi = parseInt(h, 10);
+    var mi = parseInt(m, 10);
+    var si = parseInt(s, 10);
+    var time = (yi << 40) | (mhi << 32) | (di << 24) | (hi << 16) | (mi << 8) | si;
+    $("#realtime_output").val(time);
+});
+
 var arrHead = new Array(); // array for header.
 arrHead = ['', 'Owner', 'Time', 'Value'];
 var owner_default_onoff;

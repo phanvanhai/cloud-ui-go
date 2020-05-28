@@ -10,6 +10,16 @@
 </head>
 
 <body>
+    <div class="form-control">
+        <form action="" class="form-inline">
+            <button class="btn-primary" id="realtime_btn">Realtime</button> &nbsp;&nbsp; Day:
+            <input type="text" class="form-control" id="realtime_day" style="width: 50px;">Hour:
+            <input type="text" class="form-control" id="realtime_hour" style="width: 50px;"> &nbsp;&nbsp;Min:
+            <input type="text" class="form-control" id="realtime_min" style="width: 50px;"> &nbsp;&nbsp;Sec:
+            <input type="text" class="form-control" id="realtime_sec" style="width: 50px;"> &nbsp;&nbsp; RealTime:
+            <input type="text" class="form-control" id="realtime_output" disabled>
+        </form>
+    </div>
     <br>
     <div>
         <div class="form-inline">
@@ -19,7 +29,7 @@
         <div id="cont_onoff"></div>
         <!-- the container to add the TABLE -->
         <button class="btn-primary" id="bt_onoff" onclick="submit_onoff()">Submit Data</button>
-        <input type="text" class="form-control" id="output_onoff" disabled>
+        <input type="text" class="form-control" id="output_onoff">
     </div>
     <br>
     <div>
