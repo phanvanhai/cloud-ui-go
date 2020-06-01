@@ -1,7 +1,7 @@
 [{
     "title": "Gateway",
     "url": "/pages/gateway.html",
-    "icon": "fa fa-bank"
+    "icon": "fa fa-home fa-lg"
 }, {
     "title": "DeviceService",
     "url": "/pages/devices/deviceService.html",
@@ -27,8 +27,37 @@
     "icon": "fa fa-wifi",
     "children": []
 }, {
-    "title": "Util",
-    "url": "/pages/util.html",
-    "icon": "fa fa-briefcase",
+    "title": "Monitor",
+    "url": "/pages/reading.html",
+    "icon": "fa fa-bar-chart",
     "children": []
+}, {
+    "title": "Object",
+    "icon": "fa fa-tachometer fa-lg",
+    "children": [{
+        "title": " Sensor",
+        "url": "/pages/sensor.html",
+        "icon": "fa fa-thermometer-half fa-lg",
+        "children": []
+    }, {
+        "title": " Light",
+        "url": "/pages/light.html",
+        "icon": "fa fa-lightbulb-o fa-lg",
+        "children": []
+    }, {
+        "title": " LightGroup",
+        "url": "/pages/group.html",
+        "icon": "fa fa-paw fa-lg",
+        "children": []
+    }, {
+        "title": " Scenario",
+        "url": "/pages/scenario.html",
+        "icon": "fa fa-pencil-square-o fa-lg",
+        "children": []
+    }, {
+        "title": " Other",
+        "url": "/pages/gatewayObject.html",
+        "icon": "fa fa-bank",
+        "children": []
+    }]
 }]

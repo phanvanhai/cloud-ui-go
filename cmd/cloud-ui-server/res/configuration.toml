@@ -32,12 +32,13 @@ Type = "mqtt"
     [MessageBus.SubscribeHost]
         # Host = "m16.cloudmqtt.com"
         # Port = 	14023
-        Host = "172.17.0.1"
-        # Host = "broker.emqx.io"        
+        # Host = "172.17.0.1"
+        # Host = "broker.emqx.io"
+        Host = "localhost"
         Port = 1883
         Protocol = "tcp"
     [MessageBus.PublishHost]
-        Host = "172.17.0.1"
+        Host = "localhost"
         # Host = "broker.emqx.io"
         Port = 	1883
         Protocol = "tcp"

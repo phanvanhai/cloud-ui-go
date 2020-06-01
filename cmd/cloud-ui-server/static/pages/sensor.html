@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <!-- device start -->
+    <div id="sensor-device-main">
+        <div id="sensor-device-list" style="position:relative;">
+            <!-- device list start -->
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Devices &nbsp; <button class="btn btn-info fa fa-refresh" onclick="sensorApp.loadDevice();"></button>
+                    </h3>
+                </div>
+                <div class="panel panel-default" style="border:none;outline:none;margin:0;">
+                </div>
+
+                <div class="panel-body" style="padding:0;overflow:auto;">
+                    <div id="sensor-device-list-table">
+                        <table class="table table-responsive table-hover table-striped">
+                            <thead>
+                                <tr class="active">
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>AdminState</th>
+                                    <th>Commands</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot style="display:none;">
+                                <tr align="center">
+                                    <td colspan=13>No Device.</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- device list end -->
+        </div>
+
+        <!-- command start -->
+        <div id="sensor-command-main" hidden>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <button class="btn btn-warning fa fa-arrow-left" onclick="sensorApp.cancelCommand();"></button> &nbsp; &nbsp;<i id="sensor-currentDevice"></i>
+                    </h3>
+                </div>
+                <div class="form-group">
+                    <fieldset>
+                        <legend>Sensor </legend>
+                        <div class="form-inline">
+                            <label for="sensor-onoff-status">On-Off :</label>
+                            <input id="sensor-onoff-status" type="text" style="width: 100px;">
+                            <button class="btn btn-info fa fa-refresh" onclick="sensorApp.command_get_onoff();"></button>&nbsp;&nbsp;
+                            <button class="btn btn-success fa fa-check" onclick="sensorApp.command_set_onoff();"></button> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Value </legend>
+                        <div class="form-inline">
+                            <label for="sensor-measure-status">Sensor Value :</label>
+                            <input type="text" name="" id="sensor-measure-status" style="width: 100px;">
+                            <button class="btn btn-info fa fa-refresh" onclick="sensorApp.command_get_measure();"></button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <!-- command end -->
+    </div>
+</body>
+
+<script src="/js/sensor.js"></script>
+
+</html>

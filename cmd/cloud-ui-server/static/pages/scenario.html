@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <!-- device start -->
+    <div id="scenario-device-main">
+        <div id="scenario-device-list" style="position:relative;">
+            <!-- device list start -->
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Scenarios &nbsp; <button class="btn btn-info fa fa-refresh" onclick="scenarioApp.loadDevice();"></button>
+                    </h3>
+                </div>
+                <div class="panel panel-default" style="border:none;outline:none;margin:0;">
+                </div>
+
+                <div class="panel-body" style="padding:0;overflow:auto;">
+                    <div id="scenario-device-list-table">
+                        <table class="table table-responsive table-hover table-striped">
+                            <thead>
+                                <tr class="active">
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Commands</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot style="display:none;">
+                                <tr align="center">
+                                    <td colspan=13>No Device.</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- device list end -->
+        </div>
+
+        <!-- command start -->
+        <div id="scenario-command-main" hidden>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <button class="btn btn-warning fa fa-arrow-left" onclick="scenarioApp.cancelCommand();"></button> &nbsp; &nbsp;<i id="scenario-currentDevice"></i>
+                    </h3>
+                </div>
+                <div class="form-group">
+                    <fieldset>
+                        <legend>Trigger </legend>
+                        <div align='center'>
+                            <button class="btn btn-success" onclick="scenarioApp.command_set_trigger();">Trigger</button>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Elements</legend>
+                        <div>
+                            <div class="form-inline">
+                                <button class="btn btn-info fa fa-refresh" onclick="scenarioApp.load_element();"></button>
+                                <button class="btn btn-warning fa fa-plus" onclick="scenarioApp.addRow_element();"></button>
+                                <button class="btn btn-success fa fa-check" onclick="scenarioApp.submit_element();"></button>
+                            </div>
+
+                            <div class="panel-body" style="padding:0;">
+                                <div id="scenario-elementTable">
+                                    <table class="table table-responsive table-hover table-striped" ">
+                                            <thead>
+                                                <tr class="active ">
+                                                    <th></th>
+                                                    <th>Element</th>
+                                                    <th>Command</th>
+                                                    <th>Body</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot style="display:none; ">
+                                                <tr align='center'>
+                                                    <td colspan=13>No Element.</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <!-- command end -->
+                
+    </div>
+</body>
+
+<script src="/js/scenario.js "></script>
+
+</html>

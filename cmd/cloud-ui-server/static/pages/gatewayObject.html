@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <!-- device start -->
+    <div id="gatewayObject-device-main">
+        <div id="gatewayObject-device-list" style="position:relative;">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Gateway &nbsp; <button class="btn btn-info fa fa-refresh" onclick="gatewayApp.loadDevice();"></button>
+                    </h3>
+                </div>
+            </div>
+            <div>
+                <p id="gatewayExist"></p>
+            </div>
+        </div>
+        <!-- command start -->
+        <div id="gatewayObject-command-main" hidden>
+            <div class="panel panel-success">
+                <div class="form-group">
+                    <fieldset>
+                        <legend>Relay </legend>
+                        <div class="form-inline">
+                            <label for="gatewayObject-relay-status">On-Off :</label>
+                            <input id="gatewayObject-relay-status" type="text" style="width: 100px;">
+                            <button class="btn btn-info fa fa-refresh" onclick="gatewayApp.command_get_relay();"></button>&nbsp;&nbsp;
+                            <button class="btn btn-success fa fa-check" onclick="gatewayApp.command_set_relay();"></button> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Update Firmware </legend>
+                        <div>
+                            <label for="gatewayObject-updatefirmware">Update Firmware :</label>
+                            <button class="btn btn-info fa fa-check" onclick="gatewayApp.command_updatefirmware();"></button>
+                        </div>
+                        <div>
+                            <textarea id="gatewayObject-updatefirmware" rows="15" cols="100%"></textarea>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <!-- command end -->
+    </div>
+</body>
+
+<script src="/js/gatewayObject.js"></script>
+
+</html>

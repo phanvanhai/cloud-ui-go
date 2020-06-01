@@ -354,15 +354,26 @@ orgEdgexFoundry.deviceService = (function() {
                         enableCommand = 2;
                     }
                 }
-            }
 
-            // rowData += '<td class="device-addressable-icon"><input type="hidden" value=\''+JSON.stringify(v.addressable)+'\'>' + '<i class="fa fa-eye fa-lg"></i>' + '</td>';
-            if (enableCommand == 0) {
-                rowData += '<td class="device-command-icon"><input type="hidden" value=\'' + v.id + '\'>' + '<i class="fa fa-terminal fa-lg"></i>' + '</td>';
-            } else if (enableCommand == 1) {
-                rowData += '<td >' + '<i class="fa fa-ban fa-lg" style="color: red;">Unprovisioned</i>' + '</td>';
-            } else {
-                rowData += '<td >' + '<i class="fa fa-hourglass-half fa-lg" style="color: tomato;">Provisioning...</i>' + '</td>';
+                if ((object_type == 'Device' || object_type == 'Group') && (netID != "")) {
+                    if (v.operatingState == 'DISABLED') {
+                        enableCommand = 3;
+                    }
+                }
+            }
+            switch (enableCommand) {
+                case 0:
+                    rowData += '<td class="device-command-icon"><input type="hidden" value=\'' + v.id + '\'>' + '<i class="fa fa-terminal fa-lg"></i>' + '</td>';
+                    break;
+                case 1:
+                    rowData += '<td >' + '<i class="fa fa-ban" style="color: red;">Unprovisioned</i>' + '</td>';
+                    break;
+                case 2:
+                    rowData += '<td >' + '<i class="fa fa-hourglass-half" style="color: tomato;">Provisioning...</i>' + '</td>';
+                    break;
+                case 3:
+                    rowData += '<td >' + '<i class="fa fa-chain-broken" style="color: tomato;">Disconnectd</i>' + '</td>';
+                    break
             }
 
             rowData += "<td>" + v.profile.name + "</td>";

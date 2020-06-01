@@ -38,7 +38,7 @@ function createTable_onoff() {
         tr.appendChild(th);
     }
 
-    var div = document.getElementById('cont_onoff');
+    var div = document.getElementById('table_onoff');
     div.appendChild(empTable); // add the TABLE to the container.
 }
 
@@ -136,7 +136,7 @@ function createTable_dimming() {
         tr.appendChild(th);
     }
 
-    var div = document.getElementById('cont_dimming');
+    var div = document.getElementById('table_dimming');
     div.appendChild(empTable); // add the TABLE to the container.
 }
 

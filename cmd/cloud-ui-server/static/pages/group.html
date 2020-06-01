@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <!-- device start -->
+    <div id="group-device-main">
+        <div id="group-device-list" style="position:relative;">
+            <!-- device list start -->
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Groups &nbsp; <button class="btn btn-info fa fa-refresh" onclick="groupApp.loadDevice();"></button>
+                    </h3>
+                </div>
+                <div class="panel panel-default" style="border:none;outline:none;margin:0;">
+                </div>
+
+                <div class="panel-body" style="padding:0;overflow:auto;">
+                    <div id="group-device-list-table">
+                        <table class="table table-responsive table-hover table-striped">
+                            <thead>
+                                <tr class="active">
+                                    <th></th>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Commands</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot style="display:none;">
+                                <tr align="center">
+                                    <td colspan=13>No Device.</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- device list end -->
+        </div>
+
+        <!-- command start -->
+        <div id="command-main" hidden>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <button class="btn btn-warning fa fa-arrow-left" onclick="groupApp.cancelCommand();"></button> &nbsp; &nbsp;<i id="group-currentDevice"></i>
+                    </h3>
+                </div>
+                <div class="form-group">
+                    <fieldset>
+                        <legend>Light </legend>
+                        <div class="form-inline">
+                            <label for="group-onoff-status">On-Off :</label>
+                            <input id="group-onoff-status" type="text" style="width: 100px;">
+                            <button class="btn btn-success fa fa-check" onclick="groupApp.command_set_onoff();"></button> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="group-dimming-status">Dimming :</label>
+                            <input type="text" name="" id="group-dimming-status" style="width: 100px;">
+                            <button class="btn btn-success fa fa-check" onclick="groupApp.command_set_dimming();"></button>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Schedules</legend>
+                        <fieldset>
+                            <legend>OnOff Schedules</legend>
+                            <div>
+                                <div class="form-inline">
+                                    <button class="btn btn-info fa fa-refresh" onclick="groupApp.load_onoff_schedule();"></button>
+                                    <button class="btn btn-warning fa fa-plus" onclick="groupApp.addRow_onoff_schedule();"></button>
+                                    <button class="btn btn-success fa fa-check" onclick="groupApp.submit_onoff_schedule();"></button>
+                                </div>
+
+                                <div class="panel-body" style="padding:0;">
+                                    <div id="group-onoffScheduleTable">
+                                        <table class="table table-responsive table-hover table-striped" ">
+                                            <thead>
+                                                <tr class="active ">
+                                                    <th></th>
+                                                    <th>Owner</th>
+                                                    <th>Time</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot style="display:none; ">
+                                                <tr align='center'>
+                                                    <td colspan=13>No Schedule.</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Dimming Schedules</legend>
+                            <div>
+                                <div class="form-inline ">
+                                    <button class="btn btn-info fa fa-refresh " onclick="groupApp.load_dimming_schedule(); "></button>
+                                    <button class="btn btn-warning fa fa-plus " onclick="groupApp.addRow_dimming_schedule(); "></button>
+                                    <button class="btn btn-success fa fa-check " onclick="groupApp.submit_dimming_schedule(); "></button>
+                                </div>                                
+
+                                <div class="panel-body " style="padding:0; ">
+                                    <div id='group-dimmingScheduleTable'>
+                                        <table class="table table-responsive table-hover table-striped "">
+                                            <thead>
+                                                <tr class="active">
+                                                    <th></th>
+                                                    <th>Owner</th>
+                                                    <th>Time</th>
+                                                    <th>Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot style="display:none;">
+                                                <tr align="center">
+                                                    <td colspan=13>No Schedule.</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Relations</legend>
+                        <fieldset>
+                            <legend>Elements &nbsp; &nbsp;
+                                <i class="fa fa-refresh" onclick="groupApp.load_element() "></i> &nbsp; &nbsp;
+                                <i class="fa fa-plus" onclick="groupApp.addElement() "></i>
+                            </legend>
+                            <div id="group-elementTable">
+                                <table class="table table-responsive table-hover table-striped">
+                                    <thead>
+                                        <tr class="active">
+                                            <th style="width: 50px;"></th>
+                                            <th style="width: 50px;">#</th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot style="display:none;">
+                                        <tr align="center">
+                                            <td colspan=13>No Element.</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Scenario &nbsp;<i class="fa fa-refresh" onclick="groupApp.load_scenario()"></i></legend>
+                            <div id="group-parentTable">
+                                <table class="table table-responsive table-hover table-striped">
+                                    <thead>
+                                        <tr class="active">
+                                            <th></th>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Command</th>
+                                            <th>Body</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot style="display:none;">
+                                        <tr align="center">
+                                            <td colspan=13>No Scenario.</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <!-- command end -->
+
+        <!-- add element start -->
+        <div id="group-element-manager" hidden>
+            <div class="panel panel-success">
+                <div class="form-group">
+                    <fieldset>
+                        <legend>Add Element</legend>
+                        <div class="form-inline " align="center">
+                            <button class="btn btn-warning fa fa-arrow-left" onclick="groupApp.cancelElement();"> </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-success fa fa-check " onclick="groupApp.submitElement(); "></button>
+                        </div>
+                        <br>
+                        <div align="center">
+                            <label for="group-name-element-select">Element Name</label>
+                            <select id="group-name-element-select" class="form-control">
+                                <!-- <option>Device1</option>
+                                <option>Device2</option> -->
+                            </select>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <!-- add element end -->
+    </div>
+</body>
+
+<script src="/js/group.js"></script>
+
+</html>

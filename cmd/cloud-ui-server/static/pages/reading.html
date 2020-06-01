@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="/css/reading.css">
+    <script src="/vendors/flatpickr/flatpickr.min.js"></script>
+    <script type="text/javascript" src="/js/reading.js"></script>
+    <script src="/vendors/echarts/echarts.min.js"></script>
+</head>
+
+<body>
+    <div id="monitor-tab-main">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Monitor &nbsp; <button class="btn btn-info fa fa-refresh" onclick="monitor.loadDevice();"></button>
+                </h3>
+            </div>
+            <div class="panel panel-default" style="border:none;outline:none;margin:0;">
+                <div class="panel-heading" style="padding:5px 2px;">
+                    <div>
+                        <form class="form-inline">
+                            &nbsp; Device: &nbsp;
+                            <select name="monitor-selectDevice" id="monitor-selectDevice" class="form-control">                                 
+                </select> &nbsp; Reading: &nbsp;
+                            <select name="monitor-selectReading" id="monitor-selectReading" class="form-control">                   
+                </select> &nbsp; limit &nbsp; <select id="monitor-limit" class="form-control">
+                    <option>10</option>
+                    <option>50</option>
+                    <option>100</option>
+                    <option>300</option>
+                    <option>500</option>
+                </select> &nbsp;&nbsp;
+                            <i id="monitor-search" style="color:green;" onclick="monitor.searchBtn()" class="fa fa-search fa-lg" aria-hidden="true"></i> &nbsp;&nbsp;
+                            <i id="monitor-start-monitor" style="color:green;" onclick="monitor.startMonitor()" class="fa fa-tv fa-lg" aria-hidden="true" data-toggle="log-tooltip" data-placement="right" title="Monitor,click start."></i>
+                            <i id="monitor-stop-monitor" style="display:none;color:red;" onclick="monitor.stopMonitor()" class="fa fa-tv fa-lg" aria-hidden="true" data-toggle="log-tooltip" data-placement="right" title="Monitor Recording.">&nbsp;&nbsp;&nbsp;</i>                            &nbsp;&nbsp;
+                            <i id="monitor-eraser-screen" style="color:green;" onclick="monitor.eraseScreenBtn()" class="fa fa-eraser fa-lg" aria-hidden="true" data-toggle="log-tooltip" data-placement="right" title="erase screen."></i>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- preparing a DOM with width and height for ECharts -->
+            <div id="chart-reading" style="height:400px;"></div>
+
+
+            <!-- <div class="panel-body" id="log-content" style="padding:0;">
+                <div class="log_content">                    
+                </div>
+            </div> -->
+        </div>
+    </div>
+</body>
+
+</html>

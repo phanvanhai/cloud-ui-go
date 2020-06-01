@@ -1,0 +1,81 @@
+<!-- device update or add start -->
+<!-- <div class="edgexfoundry-device-update-or-add" style="display:none;"> -->
+<div class="edgexfoundry-device-update-or-add">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Add or Update Device</h3>
+        </div>
+        <div class="panel panel-default" style="border:none;outline:none;margin:0;">
+            <div class="panel-heading" style="padding:5px 2px;">
+                <div class="edgexIconBtn add-device" onclick="orgEdgexFoundry.deviceService.uploadDevice('new');">
+                    <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                </div>
+                <div class="edgexIconBtn update-device" style="display:none;" onclick="orgEdgexFoundry.deviceService.uploadDevice();">
+                    <i class="fa fa-check fa-lg" aria-hidden="true"></i>
+                </div>
+                <div class="edgexIconBtn" onclick="orgEdgexFoundry.deviceService.cancelAddOrUpdateDevice()">
+                    <i class="fa fa-close fa-lg" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body" style="padding:0;width:100%;overflow:auto;">
+            <form class="form-group" style="width:100%;">
+                <fieldset>
+                    <legend>DeviceService</legend>
+                    <select class="form-control" id="deviceServiceNameSelect"></select>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Device</legend>
+                    <div class="form-inline">
+                        ID<input class="form-control" type="text" name="deviceID" disabled value=""> Name
+                        <input class="form-control" type="text" name="deviceName" value="">
+                    </div>
+                    <div>
+                        Description<input class="form-control" type="text" name="deviceDescription" value="">
+                    </div>
+                    <div>
+                        Labels<input class="form-control" type="text" name="deviceLabels" placeholder="label1,label2" value="">
+                    </div>
+                    <div class="form-inline">
+                        AdminState
+                        <select class="form-control" name="deviceAdminState">
+                                                  <option>UNLOCKED</option>
+                                                  <option>LOCKED</option>
+                                              </select> OperatingState
+                        <select class="form-control" name="deviceOperatingState">
+                                                  <option>ENABLED</option>
+                                                  <option>DISABLED</option>
+                                              </select>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Protocols</legend>
+                    <div class="edgexfoundry-device-protocols" style="width: 100%;overflow: auto;">
+                        <div class="device-protocol" style="align:center;">
+                            <div style="display:inline-block;float:left;margin-right:10px;">
+                                <select class="form-control" id="deviceProtocolNameSelect">
+                                              </select>
+                            </div>
+
+                            <div class="protocol-body" style="display:inline-block;border-left:1px solid gray;">
+
+                                <div class="edgexIconBtn add-protocol" style="float:left;margin-top:7px;" onclick="orgEdgexFoundry.deviceService.addProtocolField();">
+                                    <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+                                </div>
+
+                                <div class="protocol-field-collection" style="clear:left;display:inline-block!important;">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+</div>
+<!-- device update or add end -->

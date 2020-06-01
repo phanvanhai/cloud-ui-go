@@ -57,6 +57,9 @@ $(document).ready(function() {
         contentType: 'application/json',
         success: function(data) {
             console.log("create stream success!");
+        },
+        error: function(xhr, status, error) {
+            console.log(error + '\n' + xhr.responseText);
         }
     });
 
