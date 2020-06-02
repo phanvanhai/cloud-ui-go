@@ -162,8 +162,7 @@ monitor = (function() {
         var option = {
             title: { text: 'Line Chart' },
             xAxis: {
-                name: 'Count',
-                data: []
+                name: 'Count'
             },
             yAxis: { name: 'Reading Value' },
             series: [{
@@ -185,10 +184,12 @@ monitor = (function() {
         for (var i = 0; i < readings.length; i++) {
             if (readings[i].valueType == 'Bool') {
                 var value = (readings[i].value == 'true');
-                dim2.push([i, value]);
+                var time = new Date(readings[i].origin / 1000000);
+                dim2.push([time, value]);
             } else {
                 var value = parseInt(readings[i].value);
-                dim2.push([i, value]);
+                var time = new Date(readings[i].origin / 1000000);
+                dim2.push([time, value]);
             }
         }
 
@@ -197,14 +198,15 @@ monitor = (function() {
             tooltip: {},
             xAxis: {
                 name: 'Count',
+                type: 'time'
             },
             yAxis: {
                 name: name,
+                type: 'value'
             },
             series: [{
                 type: 'line',
-                name: 'index , value',
-                smooth: true,
+                // smooth: true,
                 data: dim2
             }]
         };
