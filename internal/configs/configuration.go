@@ -11,13 +11,13 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  *
- * @author: Huaqiao Zhang, <huaqiaoz@vmware.com>
  *******************************************************************************/
 
 package configs
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -31,10 +31,9 @@ const (
 )
 
 var (
-	ServerConf    Service
-	ProxyConf     DynamicProxy
-	ProxyMapping  map[string]string
-	CurrentConfig *Config
+	PrefixServiceMap map[string]string
+	ProxyMapping     map[string]string
+	CurrentConfig    *Config
 )
 
 // BindingInfo contains Metadata associated with each binding
@@ -45,9 +44,8 @@ type BindingInfo struct {
 }
 
 type Config struct {
-	Server Service `toml:"Service"`
-	// DB     Database     `toml:"Database"`
-	Proxy DynamicProxy `toml:"DynamicProxy"`
+	Server  Service               `toml:"Service"`
+	Clients map[string]ClientInfo `toml:"Clients"`
 	// MessageBus
 	MessageBus types.MessageBusConfig
 	// Binding
@@ -63,40 +61,15 @@ type Service struct {
 	TimePubSub          int64
 }
 
-type Scheme struct {
-	User    string
-	Gateway string
-}
-
-type DynamicProxy struct {
-	CoreDataPath string
-	CoreDataPort string
-
-	CoreMetadataPath string
-	CoreMetadataPort string
-
-	CoreCommandPath string
-	CoreCommandPort string
-
-	RuleEnginePath string
-	RuleEnginePort string
-
-	SupportLoggingPath string
-	SupportLoggingPort string
-
-	SupportNotificationPath string
-	SupportNotificationPort string
-
-	SupportSchedulerPath string
-	SupportSchedulerPort string
-}
-
-type RegistryConfig struct {
-	Host               string
-	Port               int
-	Type               string
-	ConfigRegistryStem string
-	ServiceVersion     string
+type ClientInfo struct {
+	// Host is the hostname or IP address of a service.
+	Host string
+	// Port defines the port on which to access a given service
+	Port int
+	// Protocol indicates the protocol to use when accessing a given service
+	Protocol string
+	// Proxy path prefix
+	PathPrefix string
 }
 
 func LoadConfig(confFilePath string) error {
@@ -115,26 +88,20 @@ func LoadConfig(confFilePath string) error {
 		log.Printf("Decode Config File Error:%v", err)
 		return err
 	}
-	ServerConf = conf.Server
-	ProxyConf = conf.Proxy
-	initProxyMapping()
 	CurrentConfig = &conf
+	initProxyMapping()
 	return nil
 }
 
 func initProxyMapping() {
 
-	ProxyMapping = make(map[string]string, 10)
+	ProxyMapping = make(map[string]string)
+	PrefixServiceMap = make(map[string]string)
 
-	ProxyMapping[ProxyConf.CoreDataPath] = ProxyConf.CoreDataPort
-	ProxyMapping[ProxyConf.CoreMetadataPath] = ProxyConf.CoreMetadataPort
-	ProxyMapping[ProxyConf.CoreCommandPath] = ProxyConf.CoreCommandPort
-
-	ProxyMapping[ProxyConf.RuleEnginePath] = ProxyConf.RuleEnginePort
-
-	ProxyMapping[ProxyConf.SupportLoggingPath] = ProxyConf.SupportLoggingPort
-	ProxyMapping[ProxyConf.SupportNotificationPath] = ProxyConf.SupportNotificationPort
-	ProxyMapping[ProxyConf.SupportSchedulerPath] = ProxyConf.SupportSchedulerPort
+	for service, client := range CurrentConfig.Clients {
+		ProxyMapping[client.PathPrefix] = fmt.Sprintf("%s://%s:%d", client.Protocol, client.Host, client.Port)
+		PrefixServiceMap[client.PathPrefix] = service
+	}
 }
 
 func GetConfig() *Config {

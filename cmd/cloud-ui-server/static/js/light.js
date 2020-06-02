@@ -320,7 +320,7 @@ lightApp = (function() {
 
     Light.prototype.command_set_dimming = function() {
             var value = $('#light-dimming-status').val();
-            var resource = light.MapResource.OnOff;
+            var resource = light.MapResource.Dimming;
             var body = {
                 [resource]: value
             };

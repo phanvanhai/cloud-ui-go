@@ -1,0 +1,52 @@
+[Service]
+Host = "edgex-ui-go"
+Port = 5000
+Labels = []
+OpenMsg = "edgex ui started"
+StaticResourcesPath = "./static"
+
+[Clients]
+    [Clients.CoreData]
+    Protocol = 'http'
+    Host = 'edgex-core-data'
+    Port = 48080
+    PathPrefix = "/core-data"
+
+    [Clients.Metadata]
+    Protocol = 'http'
+    Host = 'edgex-core-metadata'
+    Port = 48081
+    PathPrefix = "/core-metadata"
+
+    [Clients.CoreCommand]
+    Protocol = 'http'
+    Host = 'edgex-core-command'
+    Port = 48082
+    PathPrefix = "/core-command"
+
+    [Clients.Notification]
+    Protocol = 'http'
+    Host = 'edgex-support-notifications'
+    Port = 48060
+    PathPrefix = "/support-notification"
+
+    [Clients.Scheduler]
+    Protocol = 'http'
+    Host = 'edgex-support-scheduler'
+    Port = 48085
+    PathPrefix = "/support-scheduler"
+
+    [Clients.RuleEngine]
+    Protocol = 'http'
+    Host = 'edgex-kuiper'
+    Port = 48075
+    PathPrefix = "/rule-engine"
+
+    [Clients.Logging]
+    Protocol = 'http'
+    Host = 'edgex-support-logging'
+    Port = 48061
+    PathPrefix = "/support-logging"    
+
+[Binding]
+Type="http"

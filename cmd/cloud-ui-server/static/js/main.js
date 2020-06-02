@@ -38,11 +38,10 @@ $(document).ready(function() {
         success: function(data) {
             var menu = eval(data);
             menuRender(menu);
-            $(".center .tab-content #edgex-foundry-tab-Gateway ").load("/pages/gateway.html");
-            // $(".sidebar li[url='/pages/gateway.html']").css({color:'#339933',borderBottom: '2px solid',borderBottomColor:'#339933'});
+            $(".center .tab-content #edgex-foundry-tab-Home ").load("/pages/gateway.html");
             $(".sidebar li[url='/pages/gateway.html']").css({ color: '#339933', borderBottom: '', backgroundColor: 'rgba(51, 153, 51, 0.5)' });
-            edgexFoundryCreatedTabs.push("edgex-foundry-tab-Gateway");
-            $("a[href='#edgex-foundry-tab-Gateway']").tab('show');
+            edgexFoundryCreatedTabs.push("edgex-foundry-tab-Home");
+            $("a[href='#edgex-foundry-tab-Home']").tab('show');
             bindCloseTab();
         }
     });
@@ -104,13 +103,6 @@ $(document).ready(function() {
     function bindCloseTab() {
         $("#edgex-foundry-tabs-index-main .edgex-tab button").off('click').on('click', function() {
             event.stopPropagation();
-            if ($(this).parent().attr("tabindex") == "edgex-foundry-tab-Gateway") {
-                bootbox.alert({
-                    message: "Can not remove gateway tab!",
-                    className: 'red-green-buttons'
-                });
-                return;
-            }
             var btn = this;
 
             bootbox.confirm({

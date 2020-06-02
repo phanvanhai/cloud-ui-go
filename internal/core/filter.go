@@ -45,12 +45,12 @@ func AuthFilter(h http.Handler) http.Handler {
 			strings.HasPrefix(path, VendorsPath) ||
 			strings.HasPrefix(path, DataPathPrefix) {
 
-			http.FileServer(http.Dir(configs.ServerConf.StaticResourcesPath)).ServeHTTP(w, r)
+			http.FileServer(http.Dir(configs.GetConfig().Server.StaticResourcesPath)).ServeHTTP(w, r)
 			return
 		}
 
 		if path == RootURIPath {
-			http.FileServer(http.Dir(configs.ServerConf.StaticResourcesPath)).ServeHTTP(w, r)
+			http.FileServer(http.Dir(configs.GetConfig().Server.StaticResourcesPath)).ServeHTTP(w, r)
 			return
 		}
 

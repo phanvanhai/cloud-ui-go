@@ -44,19 +44,21 @@ func main() {
 	}
 
 	r := internal.InitRestRoutes()
-	err = messagebus.Initialize(configs.GetConfig())
-	if err != nil {
-		log.Printf("ERROR: Connect MessageBus failed. Error:%v\n", err)
+	if configs.GetConfig().Binding.Type == "messagebus" {
+		err = messagebus.Initialize(configs.GetConfig())
+		if err != nil {
+			log.Printf("ERROR: Connect MessageBus failed. Error:%v\n", err)
+		}
 	}
 
 	server := &http.Server{
 		Handler:      core.GeneralFilter(r),
-		Addr:         ":" + strconv.FormatInt(configs.ServerConf.Port, 10),
+		Addr:         ":" + strconv.FormatInt(configs.GetConfig().Server.Port, 10),
 		WriteTimeout: 45 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 
-	log.Println("Cloud UI Server Listen On " + server.Addr)
+	log.Println("UI Server Listen On " + server.Addr)
 
 	log.Fatal(server.ListenAndServe())
 }

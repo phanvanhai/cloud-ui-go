@@ -203,7 +203,7 @@ monitor = (function() {
             },
             series: [{
                 type: 'line',
-                name: 'index : value',
+                name: 'index , value',
                 smooth: true,
                 data: dim2
             }]

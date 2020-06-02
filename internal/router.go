@@ -30,43 +30,8 @@ func InitRestRoutes() http.Handler {
 	r := mux.NewRouter()
 	r.HandleFunc("/request/{service}/{path}", messagebus.ProxyHandler)
 	r.HandleFunc("/getconfig", configs.GetConfigHandler).Methods(http.MethodGet)
-	// r.HandleFunc("/setconfig", PostConfigHandler).Methods(http.MethodPost)
 	s := r.PathPrefix("/api/v1").Subrouter()
 	s.HandleFunc("/profile/download", handler.DowloadProfile).Methods(http.MethodGet)
 
 	return r
 }
-
-// func PostConfigHandler(w http.ResponseWriter, r *http.Request) {
-// 	defer r.Body.Close()
-
-// 	body, err := ioutil.ReadAll(r.Body)
-// 	if err != nil {
-// 		fmt.Println("can't read body")
-// 		http.Error(w, "can't read body", http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	var config configs.Config
-// 	err = json.Unmarshal(body, &config)
-// 	if err != nil {
-// 		fmt.Println(err.Error())
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	config.MessageBus.Type = "mqtt"
-
-// 	cf := configs.GetConfig()
-// 	cf.Binding = config.Binding
-// 	cf.MessageBus = config.MessageBus
-
-// 	err = messagebus.Initialize(cf)
-// 	if err != nil {
-// 		fmt.Println(err.Error())
-// 		http.Error(w, err.Error(), http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	w.Write([]byte("Update success"))
-// }

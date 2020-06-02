@@ -31,7 +31,7 @@ const (
 
 func DowloadProfile(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-	relativeTemplateFilePath := filepath.Join(configs.ServerConf.StaticResourcesPath, TemplateDirName, ProfileTemplateName)
+	relativeTemplateFilePath := filepath.Join(configs.GetConfig().Server.StaticResourcesPath, TemplateDirName, ProfileTemplateName)
 	data, err := ioutil.ReadFile(relativeTemplateFilePath)
 
 	if err == nil {

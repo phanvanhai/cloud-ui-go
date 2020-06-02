@@ -36,32 +36,24 @@ const (
 func ProxyHandler(w http.ResponseWriter, r *http.Request, path string, prefix string) {
 	defer r.Body.Close()
 
-	port := configs.GetConfig().Server.Port
-	portStr := strconv.FormatInt(port, 10)
-	targetIP := configs.GetConfig().Server.Host
-	targetAddr := HttpProtocol + "://" + targetIP + ":" + portStr
+	targetAddr := ""
+	newPath := ""
+	if configs.GetConfig().Binding.Type == "messagebus" {
+		port := configs.GetConfig().Server.Port
+		portStr := strconv.FormatInt(port, 10)
+		// targetIP := configs.GetConfig().Server.Host
+		targetIP := "localhost"
+		targetAddr = HttpProtocol + "://" + targetIP + ":" + portStr
 
-	service := ""
-	switch prefix {
-	case configs.ProxyConf.CoreDataPath:
-		service += configs.ProxyConf.CoreDataPort
-	case configs.ProxyConf.CoreMetadataPath:
-		service += configs.ProxyConf.CoreMetadataPort
-	case configs.ProxyConf.CoreCommandPath:
-		service += configs.ProxyConf.CoreCommandPort
-	case configs.ProxyConf.RuleEnginePath:
-		service += configs.ProxyConf.RuleEnginePort
-	case configs.ProxyConf.SupportLoggingPath:
-		service += configs.ProxyConf.SupportLoggingPort
-	case configs.ProxyConf.SupportNotificationPath:
-		service += configs.ProxyConf.SupportNotificationPort
-	case configs.ProxyConf.SupportSchedulerPath:
-		service += configs.ProxyConf.SupportSchedulerPort
+		service := configs.PrefixServiceMap[prefix]
+		path = strings.ReplaceAll(path, "/", ":")
+		newPath = fmt.Sprintf("/request/%s/%s", service, path)
+	} else {
+		targetAddr = configs.ProxyMapping[prefix]
+		newPath = path
 	}
-	path = strings.ReplaceAll(path, "/", ":")
-	newPath := fmt.Sprintf("/request/%s/%s", service, path)
-	origin, _ := url.Parse(targetAddr)
 
+	origin, _ := url.Parse(targetAddr)
 	director := func(req *http.Request) {
 		req.Header.Add(ForwardedHostReqHeader, req.Host)
 		req.Header.Add(OriginHostReqHeader, origin.Host)
