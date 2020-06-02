@@ -19,7 +19,7 @@ TimePubSub = 30
     Port = 48081
     PathPrefix = "/core-metadata"
 
-    [Clients.CoreCommand]
+    [Clients.Command]
     Protocol = 'http'
     Host = 'edgex-core-command'
     Port = 48082

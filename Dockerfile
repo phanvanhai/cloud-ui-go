@@ -35,4 +35,4 @@ COPY --from=builder /go/src/github.com/phanvanhai/cloud-ui-go /go/src/github.com
 
 WORKDIR /go/src/github.com/phanvanhai/cloud-ui-go/cmd/cloud-ui-server
 
-ENTRYPOINT ["./cloud-ui-server"]
+ENTRYPOINT ["./cloud-ui-server","-conf=res/docker-mqtt/configuration.toml"]
