@@ -38,7 +38,7 @@ $(document).ready(function() {
         success: function(data) {
             var menu = eval(data);
             menuRender(menu);
-            $(".center .tab-content #edgex-foundry-tab-Home ").load("/pages/gateway.html");
+            $(".center .tab-content #edgex-foundry-tab-Home ").load("/pages/home.html");
             $(".sidebar li[url='/pages/gateway.html']").css({ color: '#339933', borderBottom: '', backgroundColor: 'rgba(51, 153, 51, 0.5)' });
             edgexFoundryCreatedTabs.push("edgex-foundry-tab-Home");
             $("a[href='#edgex-foundry-tab-Home']").tab('show');

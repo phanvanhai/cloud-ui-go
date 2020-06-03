@@ -155,6 +155,7 @@ groupApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("trying... Reload after few seconds");
                 },
@@ -215,6 +216,7 @@ groupApp = (function() {
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(body),
+            dataType: 'text',
             success: function(data) {
                 alert("success");
             },
@@ -252,6 +254,7 @@ groupApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },
@@ -355,6 +358,7 @@ groupApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },
@@ -457,6 +461,7 @@ groupApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },
@@ -547,6 +552,7 @@ groupApp = (function() {
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(body),
+            dataType: 'text',
             success: function(data) {
                 alert("success");
                 client.load_element();
@@ -579,6 +585,7 @@ groupApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                     client.cancelElement();

@@ -197,7 +197,7 @@ monitor = (function() {
             title: { text: 'Chart of Device: ' + device },
             tooltip: {},
             xAxis: {
-                name: 'Count',
+                name: 'Time',
                 type: 'time'
             },
             yAxis: {

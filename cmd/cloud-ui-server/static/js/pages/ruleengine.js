@@ -45,108 +45,8 @@ $(document).ready(function() {
         $("#action_device_list table").toggle();
         $("#condition_device_list table").hide();
     });
-
-    // initialize stream
-    var stream = {};
-    stream['sql'] = 'create stream event() WITH (FORMAT="JSON", TYPE="edgex")';
-    // console.log(JSON.stringify(stream));
-    $.ajax({
-        url: '/rule-engine/streams',
-        type: 'POST',
-        data: JSON.stringify(stream),
-        contentType: 'application/json',
-        success: function(data) {
-            console.log("create stream success!");
-        },
-        error: function(xhr, status, error) {
-            console.log(error + '\n' + xhr.responseText);
-        }
-    });
-
-    //initialize loading device-ComboGrid data.
-    $.ajax({
-        url: '/core-metadata/api/v1/device',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            //initialize loading commands-ComboGrid data.
-            $.ajax({
-                url: '/core-command/api/v1/device',
-                type: 'GET',
-                dataType: 'json',
-                success: function(cm_data) {
-                    orgEdgexFoundry.supportRuleEngine.commandDataCache = cm_data;
-
-                    orgEdgexFoundry.supportRuleEngine.deviceDataCache = data;
-                    $("#action_device_list table tbody").empty();
-                    $("#condition_device_list table tbody").empty();
-                    $.each(data, function(i, d) {
-                        var rowData = "<tr>";
-                        rowData += "<td><input type='radio' name='condition' value= '" + d.id + "'></td>";
-                        rowData += "<td>" + (i + 1) + "</td>";
-                        rowData += "<td>" + d.name + "</td>";
-                        rowData += "</tr>";
-                        $("#action_device_list table  tbody").append(rowData);
-                        $("#condition_device_list table  tbody").append(rowData);
-                    });
-                    $("#condition_device_list table  tbody input:radio").on('click', function() {
-                        if ($(this).prop('checked')) {
-                            var radio = this;
-                            $.each(orgEdgexFoundry.supportRuleEngine.deviceDataCache, function(i, d) {
-                                if (d.id == $(radio).val()) {
-                                    $("#condition_device_list div.select_panle input[name='condition_device_name']").val(d.name);
-                                    $("select[name='parameter']").empty();
-                                    $.each(d.profile.deviceResources, function(j, resource) {
-                                        var opts = "<option>" + resource.name + "</option>";
-                                        $(".condition_device_list select[name='parameter']").append(opts);
-                                    });
-                                }
-                            });
-                        }
-                    });
-
-                    $("#action_device_list table  tbody input:radio").on('click', function() {
-                        if ($(this).prop('checked')) {
-                            var radio = this;
-                            $.each(orgEdgexFoundry.supportRuleEngine.commandDataCache, function(i, d) {
-                                if (d.id == $(radio).val()) {
-                                    $("#action_device_list div.select_panle input[name='action_device_name']").val(d.name);
-                                    $("select[name='commandName']").empty();
-                                    $.each(d.commands, function(j, cmd) {
-                                        var opts = "<option value='" + cmd.id + "'>" + cmd.name + "</option>";
-                                        $(".action_device_list select[name='commandName']").append(opts);
-                                    });
-                                    //trigger command select change event manually to render command's parameters.
-                                    $(".action_device_list select[name='commandName']").change();
-                                }
-                            });
-                        }
-                    });
-
-                    $(".action_device_list select[name='commandName']").on('change', function() {
-                        $("#action_device_param").empty();
-                        var cmdId = $(this).val();
-                        $.each(orgEdgexFoundry.supportRuleEngine.commandDataCache, function(i, d) {
-                            $.each(d.commands, function(k, cmd) {
-                                if (cmd.id == cmdId) {
-                                    if (cmd.put == null) {
-                                        return;
-                                    }
-                                    var parmArr = cmd.put.parameterNames;
-                                    $.each(parmArr, function(n, p) {
-                                        var ele = p + "&nbsp;&nbsp;" + "<input class='form-control' style='width:150px;' name='" + p + "'>";
-                                        $("#action_device_param").append(ele);
-                                    });
-                                    return;
-                                }
-                            });
-                        });
-                    });
-                    alert("Khoi tao thong tin thanh cong!");
-                }
-            });
-        }
-    });
+    // orgEdgexFoundry.supportRuleEngine.loadDevice();
+    orgEdgexFoundry.supportRuleEngine.initRulesEngine();
 });
 
 orgEdgexFoundry.supportRuleEngine = (function() {
@@ -160,6 +60,9 @@ orgEdgexFoundry.supportRuleEngine = (function() {
     }
 
     SupportRuleEngine.prototype = {
+        initRulesEngine: null,
+        loadDevice: null,
+
         loadRuleData: null,
         renderRuleList: null,
         renderRuleView: null,
@@ -174,7 +77,127 @@ orgEdgexFoundry.supportRuleEngine = (function() {
 
     var ruleEngine = new SupportRuleEngine();
 
+    SupportRuleEngine.prototype.initRulesEngine = function() {
+        // initialize stream
+        $.ajax({
+            url: '/rule-engine/streams/event',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log("stream was created!");
+                alert("Khoi tao thong tin thanh cong!");
+            },
+            error: function(xhr, status, error) {
+                console.log(error + '\n' + xhr.responseText);
+                var stream = {};
+                stream['sql'] = 'create stream event() WITH (FORMAT="JSON", TYPE="edgex")';
+                // console.log(JSON.stringify(stream));
+                $.ajax({
+                    url: '/rule-engine/streams',
+                    type: 'POST',
+                    data: JSON.stringify(stream),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        console.log("create stream success!");
+                        alert("Khoi tao thong tin thanh cong!");
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error + '\n' + xhr.responseText);
+                        alert(error + '\n' + xhr.responseText);
+                    }
+                });
+            }
+        });
+    }
+
+    SupportRuleEngine.prototype.loadDevice = function() {
+        //initialize loading device-ComboGrid data.
+        $.ajax({
+            url: '/core-metadata/api/v1/device',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                //initialize loading commands-ComboGrid data.
+                $.ajax({
+                    url: '/core-command/api/v1/device',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(cm_data) {
+                        orgEdgexFoundry.supportRuleEngine.commandDataCache = cm_data;
+
+                        orgEdgexFoundry.supportRuleEngine.deviceDataCache = data;
+                        $("#action_device_list table tbody").empty();
+                        $("#condition_device_list table tbody").empty();
+                        $.each(data, function(i, d) {
+                            var rowData = "<tr>";
+                            rowData += "<td><input type='radio' name='condition' value= '" + d.id + "'></td>";
+                            rowData += "<td>" + (i + 1) + "</td>";
+                            rowData += "<td>" + d.name + "</td>";
+                            rowData += "</tr>";
+                            $("#action_device_list table  tbody").append(rowData);
+                            $("#condition_device_list table  tbody").append(rowData);
+                        });
+                        $("#condition_device_list table  tbody input:radio").on('click', function() {
+                            if ($(this).prop('checked')) {
+                                var radio = this;
+                                $.each(orgEdgexFoundry.supportRuleEngine.deviceDataCache, function(i, d) {
+                                    if (d.id == $(radio).val()) {
+                                        $("#condition_device_list div.select_panle input[name='condition_device_name']").val(d.name);
+                                        $("select[name='parameter']").empty();
+                                        $.each(d.profile.deviceResources, function(j, resource) {
+                                            var opts = "<option>" + resource.name + "</option>";
+                                            $(".condition_device_list select[name='parameter']").append(opts);
+                                        });
+                                    }
+                                });
+                            }
+                        });
+
+                        $("#action_device_list table  tbody input:radio").on('click', function() {
+                            if ($(this).prop('checked')) {
+                                var radio = this;
+                                $.each(orgEdgexFoundry.supportRuleEngine.commandDataCache, function(i, d) {
+                                    if (d.id == $(radio).val()) {
+                                        $("#action_device_list div.select_panle input[name='action_device_name']").val(d.name);
+                                        $("select[name='commandName']").empty();
+                                        $.each(d.commands, function(j, cmd) {
+                                            var opts = "<option value='" + cmd.id + "'>" + cmd.name + "</option>";
+                                            $(".action_device_list select[name='commandName']").append(opts);
+                                        });
+                                        //trigger command select change event manually to render command's parameters.
+                                        $(".action_device_list select[name='commandName']").change();
+                                    }
+                                });
+                            }
+                        });
+
+                        $(".action_device_list select[name='commandName']").on('change', function() {
+                            $("#action_device_param").empty();
+                            var cmdId = $(this).val();
+                            $.each(orgEdgexFoundry.supportRuleEngine.commandDataCache, function(i, d) {
+                                $.each(d.commands, function(k, cmd) {
+                                    if (cmd.id == cmdId) {
+                                        if (cmd.put == null) {
+                                            return;
+                                        }
+                                        var parmArr = cmd.put.parameterNames;
+                                        $.each(parmArr, function(n, p) {
+                                            var ele = p + "&nbsp;&nbsp;" + "<input class='form-control' style='width:150px;' name='" + p + "'>";
+                                            $("#action_device_param").append(ele);
+                                        });
+                                        return;
+                                    }
+                                });
+                            });
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     SupportRuleEngine.prototype.loadRuleData = function() {
+        ruleEngine.loadDevice();
         $.ajax({
             url: '/rule-engine/rules',
             type: 'GET',
@@ -184,6 +207,10 @@ orgEdgexFoundry.supportRuleEngine = (function() {
                     $("#rule-engine-list table tfoot").hide();
                 }
                 ruleEngine.renderRuleList(data);
+                alert("refresh success");
+            },
+            error: function(xhr, status, error) {
+                alert(error + '\n' + xhr.responseText);
             }
         });
     }
@@ -385,7 +412,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
 
         var newRule = {};
         newRule['id'] = name;
-        newRule['sql'] = "SELECT * FROM event WHERE meta(device) = \"" + condition_device_name + "\" AND " + parameter + " " + operation + " " + operand2;
+        newRule['sql'] = "SELECT * FROM event WHERE meta(device) = \"" + condition_device_name + "\" AND \"" + parameter + "\" " + operation + " " + operand2;
         newRule['actions'] = actions;
 
         console.log(JSON.stringify(newRule));

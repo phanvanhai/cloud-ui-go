@@ -50,8 +50,8 @@ TimePubSub = 30
     PathPrefix = "/support-logging"
 
 [Binding]
-# Type="http"
-Type="messagebus"
+Type="http"
+# Type="messagebus"
 SubscribeTopic="20151214/Response"
 PublishTopic="20151214/Request"
 

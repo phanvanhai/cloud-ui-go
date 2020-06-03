@@ -212,6 +212,7 @@ lightApp = (function() {
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(body),
+            dataType: 'text',
             success: function(data) {
                 alert("trying... Reload after few seconds");
             },
@@ -230,6 +231,7 @@ lightApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("trying... Reload after few seconds");
                 },
@@ -291,6 +293,7 @@ lightApp = (function() {
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(body),
+            dataType: 'text',
             success: function(data) {
                 alert("success");
             },
@@ -330,6 +333,7 @@ lightApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },
@@ -433,6 +437,7 @@ lightApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },
@@ -536,6 +541,7 @@ lightApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },

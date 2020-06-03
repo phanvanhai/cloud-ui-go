@@ -122,6 +122,7 @@ scenarioApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },
@@ -289,6 +290,7 @@ scenarioApp = (function() {
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(body),
+                dataType: 'text',
                 success: function(data) {
                     alert("success");
                 },
