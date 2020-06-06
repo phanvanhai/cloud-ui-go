@@ -68,6 +68,18 @@
                         </div>
                     </fieldset>
                     <fieldset>
+                        <legend>Sensor </legend>
+                        <div class="form-inline">
+                            <label for="sensor-measure-status">Light Sensor Value :</label>
+                            <input type="text" name="" id="sensor-measure-status" style="width: 100px;">
+                            <button class="btn btn-info fa fa-refresh" onclick="lightApp.command_get_measure();"></button> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label for="light-reportTime-status">Report Time :</label>
+                            <input type="text" name="" id="light-reportTime-status" style="width: 100px;">
+                            <button class="btn btn-info fa fa-refresh" onclick="lightApp.command_get_reportTime();"></button>&nbsp;&nbsp;
+                            <button class="btn btn-success fa fa-check" onclick="lightApp.command_set_reportTime();"></button>
+                        </div>
+                    </fieldset>
+                    <fieldset>
                         <legend>Schedules</legend>
                         <fieldset>
                             <legend>OnOff Schedules</legend>

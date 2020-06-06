@@ -47,6 +47,8 @@ lightApp = (function() {
             OnOffSchedule: "OnOffSchedule",
             DimmingSchedule: "DimmingSchedule",
             Realtime: "Realtime",
+            LightMeasure: "LightMeasure",
+            ReportTime: "ReportTime",
             Group: "Group",
             Scenario: "Scenario"
         };
@@ -55,7 +57,9 @@ lightApp = (function() {
             Dimming: "Light-Dimming",
             OnOffSchedule: "Light-OnOffSchedule",
             DimmingSchedule: "Light-DimmingSchedule",
+            ReportTime: "Light-ReportTime",
             Realtime: "Light-Realtime",
+            LightMeasure: "Light-LightMeasure",
             Group: "Light-Group",
             Scenario: "Light-Scenario"
         };
@@ -80,6 +84,13 @@ lightApp = (function() {
         command_set_onoff: null,
         command_get_dimming: null,
         command_set_dimming: null,
+
+        // Report Time
+        command_get_reportTime: null,
+        command_set_reportTime: null,
+
+        // sensor
+        command_get_measure: null,
 
         // onoff schedule
         load_onoff_schedule: null,
@@ -322,23 +333,80 @@ lightApp = (function() {
     }
 
     Light.prototype.command_set_dimming = function() {
-            var value = $('#light-dimming-status').val();
-            var resource = light.MapResource.Dimming;
-            var body = {
-                [resource]: value
-            };
-            console.log(JSON.stringify(body));
+        var value = $('#light-dimming-status').val();
+        var resource = light.MapResource.Dimming;
+        var body = {
+            [resource]: value
+        };
+        console.log(JSON.stringify(body));
+        $.ajax({
+            url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Dimming,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(body),
+            dataType: 'text',
+            success: function(data) {
+                alert("success");
+            },
+            error: function(xhr, status, error) {
+                alert(error + '\n' + xhr.responseText);
+                checkCodeStatus(parseError(xhr.responseText));
+            }
+        });
+    }
+
+    Light.prototype.command_get_reportTime = function() {
+        $.ajax({
+            url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.ReportTime,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+                $('#light-reportTime-status').val(data.readings[0].value);
+            },
+            error: function(xhr, status, error) {
+                alert(error + '\n' + xhr.responseText);
+                $('#light-reportTime-status').val("");
+                checkCodeStatus(parseError(xhr.responseText));
+            }
+        });
+    }
+
+    Light.prototype.command_set_reportTime = function() {
+        var value = $('#light-reportTime-status').val();
+        var resource = light.MapResource.ReportTime;
+        var body = {
+            [resource]: value
+        };
+        console.log(JSON.stringify(body));
+        $.ajax({
+            url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.ReportTime,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(body),
+            dataType: 'text',
+            success: function(data) {
+                alert("success");
+            },
+            error: function(xhr, status, error) {
+                alert(error + '\n' + xhr.responseText);
+                checkCodeStatus(parseError(xhr.responseText));
+            }
+        });
+    }
+
+    Light.prototype.command_get_measure = function() {
             $.ajax({
-                url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Dimming,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(body),
-                dataType: 'text',
+                url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.LightMeasure,
+                type: 'GET',
+                dataType: 'json',
                 success: function(data) {
-                    alert("success");
+                    console.log(data);
+                    $('#sensor-measure-status').val(data.readings[0].value);
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
+                    $('#sensor-measure-status').val("");
                     checkCodeStatus(parseError(xhr.responseText));
                 }
             });

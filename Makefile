@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-.PHONY: build clean test run docker docker-push
+.PHONY: build clean test run docker docker-push docker-multi
 
 GO= GO111MODULE=on go
 GOCGO=CGO_ENABLED=1 GO111MODULE=on go
@@ -45,8 +45,12 @@ run:
 docker: $(DOCKERS)
 
 docker_cloud_ui_go:
-	docker build --label "git_sha=$(GIT_SHA)" -t phanvanhai/docker-cloud-ui-go:$(VERSION) .
+	docker build --label "git_sha=$(GIT_SHA)" -t phanvanhai/docker-manager-tool-go:$(VERSION) .
 
 docker-push:
 	docker push \
-	phanvanhai/docker-cloud-ui-go:$(VERSION)
+	phanvanhai/docker-manager-tool-go:$(VERSION)
+
+
+docker-multi:
+	docker buildx build --platform linux/arm64,linux/amd64 -t phanvanhai/docker-manager-tool-go:$(VERSION) --push .

@@ -35,11 +35,6 @@
     "title": "Object",
     "icon": "fa fa-tachometer fa-lg",
     "children": [{
-        "title": " Sensor",
-        "url": "/pages/sensor.html",
-        "icon": "fa fa-thermometer-half fa-lg",
-        "children": []
-    }, {
         "title": " Light",
         "url": "/pages/light.html",
         "icon": "fa fa-lightbulb-o fa-lg",

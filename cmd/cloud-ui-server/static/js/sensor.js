@@ -29,11 +29,13 @@ sensorApp = (function() {
         this.MapCommand = {
             OnOff: "OnOff",
             MeasureLight: "MeasureLight",
+            ReportTime: "ReportTime",
             Realtime: "Realtime"
         };
         this.MapResource = {
             OnOff: "Sensor-OnOff",
             MeasureLight: "Sensor-MeasureLight",
+            ReportTime: "Sensor-ReportTime",
             Realtime: "Sensor-Realtime"
         };
         this.currentSelectDevice = "";
@@ -51,6 +53,10 @@ sensorApp = (function() {
         // Command
         gotoCommand: null,
         cancelCommand: null,
+
+        // Report Time
+        command_get_reportTime: null,
+        command_set_reportTime: null,
 
         // Client
         command_get_onoff: null,
@@ -226,6 +232,46 @@ sensorApp = (function() {
         // ajax ...
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.OnOff,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(body),
+            dataType: 'text',
+            success: function(data) {
+                alert("success");
+            },
+            error: function(xhr, status, error) {
+                alert(error + '\n' + xhr.responseText);
+                checkCodeStatus(parseError(xhr.responseText));
+            }
+        });
+    }
+
+    Client.prototype.command_get_reportTime = function() {
+        $.ajax({
+            url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ReportTime,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+                $('#sensor-reportTime-status').val(data.readings[0].value);
+            },
+            error: function(xhr, status, error) {
+                alert(error + '\n' + xhr.responseText);
+                $('#sensor-reportTime-status').val("");
+                checkCodeStatus(parseError(xhr.responseText));
+            }
+        });
+    }
+
+    Client.prototype.command_set_reportTime = function() {
+        var value = $('#sensor-reportTime-status').val();
+        var resource = client.MapResource.ReportTime;
+        var body = {
+            [resource]: value
+        };
+        console.log(JSON.stringify(body));
+        $.ajax({
+            url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ReportTime,
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(body),
