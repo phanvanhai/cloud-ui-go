@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-.PHONY: build clean test run docker docker-push docker-multi
+.PHONY: build clean test run docker docker-push docker-arm64
 
 GO= GO111MODULE=on go
 GOCGO=CGO_ENABLED=1 GO111MODULE=on go
@@ -52,5 +52,5 @@ docker-push:
 	phanvanhai/docker-manager-tool-go:$(VERSION)
 
 
-docker-multi:
-	docker buildx build --platform linux/arm64,linux/amd64 -t phanvanhai/docker-manager-tool-go:$(VERSION) --push .
+docker-arm64:
+	docker buildx build --platform linux/amd64 -t phanvanhai/docker-manager-tool-go:$(VERSION) --push .
