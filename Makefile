@@ -53,4 +53,4 @@ docker-push:
 
 
 docker-arm64:
-	docker buildx build --platform linux/amd64 -t phanvanhai/docker-manager-tool-go-arm64:$(VERSION) --push .
+	docker buildx build --platform linux/arm64 -t phanvanhai/docker-manager-tool-go-arm64:$(VERSION) --push .
