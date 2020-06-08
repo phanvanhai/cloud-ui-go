@@ -3,21 +3,6 @@ $(document).ready(function() {
     groupApp.loadDevice();
 });
 
-function convertTimeToStr(time) {
-    time = time >> 8;
-    var h = time >> 8;
-    var m = time & 0xFF;
-    return h.toString() + "h" + m.toString();
-}
-
-function convertStrToTime(timeStr) {
-    var arrTime = timeStr.split("h");
-    var hi = parseInt(arrTime[0], 10);
-    var mi = parseInt(arrTime[1], 10);
-    var timeInt = (hi << 16) | (mi << 8) | 1;
-    return timeInt;
-}
-
 groupApp = (function() {
     "use strict";
 

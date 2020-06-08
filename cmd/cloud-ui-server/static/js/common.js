@@ -16,28 +16,28 @@
 /*
  * Date format  yyyy-MM-dd hh:mm:ss
  */
-var dateToString = function (num){
-	var date = new Date();
-	date.setTime(num);
-	var y = date.getFullYear();
-	var M = date.getMonth() + 1;
-	M = (M < 10) ? ('0' + M) : M ;
-	var d = date.getDate();
-	d = (d < 10) ? ('0' + d) : d ;
-	var hh = date.getHours();
-	hh = (hh < 10 )? ('0' + hh) : hh ;
-	var mm = date.getMinutes();
-	mm = (mm < 10 )? ('0' + mm) : mm ;
-	var ss = date.getSeconds();
-	ss = (ss < 10) ?('0' + ss) : ss ;
+var dateToString = function(num) {
+    var date = new Date();
+    date.setTime(num);
+    var y = date.getFullYear();
+    var M = date.getMonth() + 1;
+    M = (M < 10) ? ('0' + M) : M;
+    var d = date.getDate();
+    d = (d < 10) ? ('0' + d) : d;
+    var hh = date.getHours();
+    hh = (hh < 10) ? ('0' + hh) : hh;
+    var mm = date.getMinutes();
+    mm = (mm < 10) ? ('0' + mm) : mm;
+    var ss = date.getSeconds();
+    ss = (ss < 10) ? ('0' + ss) : ss;
 
-	var str = y + '-' + M + '-' + d + ' ' + hh + ':' + mm + ':' + ss
-	return str;
+    var str = y + '-' + M + '-' + d + ' ' + hh + ':' + mm + ':' + ss
+    return str;
 };
 
-Date.prototype.Format = function (fmt) {
+Date.prototype.Format = function(fmt) {
     var o = {
-        "M+": this.getMonth() + 1, // Month
+        "M+": this.getMonth(), // Month
         "d+": this.getDate(), // Day
         "h+": this.getHours(), // Hour
         "m+": this.getMinutes(), // Minute
@@ -53,18 +53,61 @@ Date.prototype.Format = function (fmt) {
 };
 
 //ISO 8601 format (YYYYMMDD'T'HHmmss)
-var ISO8601DateStrToLocalDateStr = function (iso8601String) {
-    var year = iso8601String.substring(0,4);
-    var month = iso8601String.substring(4,6);
-    var day = iso8601String.substring(6,8);
-    var hour = iso8601String.substring(9,11);
-    var minute = iso8601String.substring(11,13);
+var ISO8601DateStrToLocalDateStr = function(iso8601String) {
+    var year = iso8601String.substring(0, 4);
+    var month = iso8601String.substring(4, 6);
+    var day = iso8601String.substring(6, 8);
+    var hour = iso8601String.substring(9, 11);
+    var minute = iso8601String.substring(11, 13);
     var second = iso8601String.substring(13);
-    return new Date(Date.UTC(year,month,day,hour,minute,second)).Format("yyyy-MM-dd hh:mm:ss");
+    return new Date(Date.UTC(year, month, day, hour, minute, second)).Format("yyyy-MM-dd hh:mm:ss");
 };
 
 //YYYYMMDD'T'HHmmss
-var LocalDateStrToISO8601DateStr = function (localString) {
+var LocalDateStrToISO8601DateStr = function(localString) {
     //iso8601 YYYY-MM-DDTHH:mm:ss.sssZ
-    return new Date(localString).toISOString().replace(/\..+/,'').replace(/[-:]/g,"")
+    return new Date(localString).toISOString().replace(/\..+/, '').replace(/[-:]/g, "")
 };
+
+
+function convertTimeToStr(time) {
+    var d = new Date();
+    var tz = d.getTimezoneOffset() / 60; // tz = -7
+
+    time = time >> 8;
+    var h = (time >> 8) - tz;
+    h = h % 24;
+    var m = time & 0xFF;
+
+    return h.toString() + "h" + m.toString();
+}
+
+function convertStrToTime(timeStr) {
+    var d = new Date();
+    var tz = d.getTimezoneOffset() / 60; // tz = -7
+
+    var arrTime = timeStr.split("h");
+    var hi = parseInt(arrTime[0], 10) + tz + 24;
+    hi = hi % 24;
+    var mi = parseInt(arrTime[1], 10);
+    var timeInt = (hi << 16) | (mi << 8) | 1;
+    return timeInt;
+}
+
+function parseError(err) {
+    var newerr = err.substring(err.indexOf(":") + 1);
+    var code = newerr.substring(0, newerr.indexOf("-")).trim();
+    var content = newerr.substring(newerr.indexOf("-") + 1);
+
+    var result = [code, content];
+    return result;
+}
+
+function checkCodeStatus(repErr) {
+    switch (repErr[0]) {
+        case "500":
+            lightApp.cancelCommand();
+            lightApp.loadDevice();
+            break
+    }
+}

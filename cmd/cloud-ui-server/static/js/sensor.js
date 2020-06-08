@@ -3,24 +3,6 @@ $(document).ready(function() {
     sensorApp.loadDevice();
 });
 
-function parseError(err) {
-    var newerr = err.substring(err.indexOf(":") + 1);
-    var code = newerr.substring(0, newerr.indexOf("-")).trim();
-    var content = newerr.substring(newerr.indexOf("-") + 1);
-
-    var result = [code, content];
-    return result;
-}
-
-function checkCodeStatus(repErr) {
-    switch (repErr[0]) {
-        case "500":
-            sensorApp.cancelCommand();
-            sensorApp.loadDevice();
-            break
-    }
-}
-
 sensorApp = (function() {
     "use strict";
 

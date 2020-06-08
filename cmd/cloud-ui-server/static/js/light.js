@@ -3,39 +3,6 @@ $(document).ready(function() {
     lightApp.loadDevice();
 });
 
-function parseError(err) {
-    var newerr = err.substring(err.indexOf(":") + 1);
-    var code = newerr.substring(0, newerr.indexOf("-")).trim();
-    var content = newerr.substring(newerr.indexOf("-") + 1);
-
-    var result = [code, content];
-    return result;
-}
-
-function checkCodeStatus(repErr) {
-    switch (repErr[0]) {
-        case "500":
-            lightApp.cancelCommand();
-            lightApp.loadDevice();
-            break
-    }
-}
-
-function convertTimeToStr(time) {
-    time = time >> 8;
-    var h = time >> 8;
-    var m = time & 0xFF;
-    return h.toString() + "h" + m.toString();
-}
-
-function convertStrToTime(timeStr) {
-    var arrTime = timeStr.split("h");
-    var hi = parseInt(arrTime[0], 10);
-    var mi = parseInt(arrTime[1], 10);
-    var timeInt = (hi << 16) | (mi << 8) | 1;
-    return timeInt;
-}
-
 lightApp = (function() {
     "use strict";
 
