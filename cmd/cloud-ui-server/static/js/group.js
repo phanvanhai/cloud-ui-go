@@ -19,14 +19,14 @@ groupApp = (function() {
             Scenario: "Scenario"
         };
         this.MapResource = {
-            OnOff: "LightGroup-OnOff",
-            Dimming: "LightGroup-Dimming",
-            OnOffSchedule: "LightGroup-OnOffSchedule",
-            DimmingSchedule: "LightGroup-DimmingSchedule",
-            Method: "LightGroup-Method",
-            Element: "LightGroup-Device",
-            ListElement: "LightGroup-ListDevice",
-            Scenario: "LightGroup-Scenario"
+            OnOff: "LightGroup_OnOff",
+            Dimming: "LightGroup_Dimming",
+            OnOffSchedule: "LightGroup_OnOffSchedule",
+            DimmingSchedule: "LightGroup_DimmingSchedule",
+            Method: "LightGroup_Method",
+            Element: "LightGroup_Device",
+            ListElement: "LightGroup_ListDevice",
+            Scenario: "LightGroup_Scenario"
         };
         this.currentSelectDevice = "";
     }

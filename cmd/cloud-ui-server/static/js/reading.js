@@ -14,15 +14,15 @@ monitor = (function() {
         this.ReadingList = [{
                 'profile': 'Light',
                 'reading': [
-                    'Light-OnOff',
-                    'Light-Dimming',
-                    'Light-LightMeasure'
+                    'Light_OnOff',
+                    'Light_Dimming',
+                    'Light_LightMeasure'
                 ]
             },
             {
                 'profile': 'Sensor',
                 'reading': [
-                    'Sensor-MeasureLight'
+                    'Sensor_MeasureLight'
                 ]
             }
         ];

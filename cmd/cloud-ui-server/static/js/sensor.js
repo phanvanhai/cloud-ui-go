@@ -15,10 +15,10 @@ sensorApp = (function() {
             Realtime: "Realtime"
         };
         this.MapResource = {
-            OnOff: "Sensor-OnOff",
-            MeasureLight: "Sensor-MeasureLight",
-            ReportTime: "Sensor-ReportTime",
-            Realtime: "Sensor-Realtime"
+            OnOff: "Sensor_OnOff",
+            MeasureLight: "Sensor_MeasureLight",
+            ReportTime: "Sensor_ReportTime",
+            Realtime: "Sensor_Realtime"
         };
         this.currentSelectDevice = "";
     }
@@ -62,13 +62,13 @@ sensorApp = (function() {
     }
 
     Client.prototype.renderDevice = function(devices) {
-        $('#sensor-command-main').hide();
-        $('#sensor-device-list').show();
+        $('#Sensor_command-main').hide();
+        $('#Sensor_device-list').show();
 
-        $("#sensor-device-list-table table tbody").empty();
-        $("#sensor-device-list-table table tfoot").hide();
+        $("#Sensor_device-list-table table tbody").empty();
+        $("#Sensor_device-list-table table tfoot").hide();
         if (!devices || devices.length == 0) {
-            $("#sensor-device-list-table table tfoot").show();
+            $("#Sensor_device-list-table table tfoot").show();
             return;
         }
         $.each(devices, function(i, v) {
@@ -77,9 +77,9 @@ sensorApp = (function() {
             rowData += "<td>" + (i + 1) + "</td>";
             rowData += '<td class="device-name">' + v.name + '</td>';
             if (v.adminState == "UNLOCKED") {
-                rowData += '<td><select class="sensor-adminState"><option value="UNLOCKED" selected>UNLOCKED</option><option value="LOCKED">LOCKED</option></select></td>';
+                rowData += '<td><select class="Sensor_adminState"><option value="UNLOCKED" selected>UNLOCKED</option><option value="LOCKED">LOCKED</option></select></td>';
             } else {
-                rowData += '<td><select class="sensor-adminState"><option value="UNLOCKED">UNLOCKED</option><option value="LOCKED" selected>LOCKED</option></select></td>';
+                rowData += '<td><select class="Sensor_adminState"><option value="UNLOCKED">UNLOCKED</option><option value="LOCKED" selected>LOCKED</option></select></td>';
             }
 
             var enableCommand = 0;
@@ -117,15 +117,15 @@ sensorApp = (function() {
             }
 
             rowData += "</tr>";
-            $("#sensor-device-list-table table tbody").append(rowData);
+            $("#Sensor_device-list-table table tbody").append(rowData);
         });
 
 
-        $('#sensor-device-list-table .sensor-adminState').change(function() {
+        $('#Sensor_device-list-table .Sensor_adminState').change(function() {
             client.setAdminState($(this).closest('td').prev('td').html(), $(this).val());
         })
 
-        $("#sensor-device-list-table .device-command-icon").on('click', function() {
+        $("#Sensor_device-list-table .device-command-icon").on('click', function() {
             var deviceName = $(this).children('input').val();
             client.gotoCommand(deviceName);
         });
@@ -173,17 +173,17 @@ sensorApp = (function() {
     // Command start  -----------------------------------------
     Client.prototype.gotoCommand = function(name) {
         client.currentSelectDevice = name;
-        $('#sensor-currentDevice').html(name);
+        $('#Sensor_currentDevice').html(name);
 
-        $('#sensor-onoff-status').val("");
-        $('#sensor-measure-status').val("");
+        $('#Sensor_onoff-status').val("");
+        $('#Sensor_measure-status').val("");
 
-        $('#sensor-device-list').hide();
-        $('#sensor-command-main').show("fast");
+        $('#Sensor_device-list').hide();
+        $('#Sensor_command-main').show("fast");
     }
     Client.prototype.cancelCommand = function() {
-        $('#sensor-command-main').hide("fast");
-        $('#sensor-device-list').show();
+        $('#Sensor_command-main').hide("fast");
+        $('#Sensor_device-list').show();
     }
 
     // Client start
@@ -194,18 +194,18 @@ sensorApp = (function() {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
-                $('#sensor-onoff-status').val(data.readings[0].value);
+                $('#Sensor_onoff-status').val(data.readings[0].value);
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $('#sensor-onoff-status').val("");
+                $('#Sensor_onoff-status').val("");
                 checkCodeStatus(parseError(xhr.responseText));
             }
         });
     }
 
     Client.prototype.command_set_onoff = function() {
-        var value = $('#sensor-onoff-status').val();
+        var value = $('#Sensor_onoff-status').val();
         var resource = client.MapResource.OnOff;
         var body = {
             [resource]: value
@@ -235,18 +235,18 @@ sensorApp = (function() {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
-                $('#sensor-reportTime-status').val(data.readings[0].value);
+                $('#Sensor_reportTime-status').val(data.readings[0].value);
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $('#sensor-reportTime-status').val("");
+                $('#Sensor_reportTime-status').val("");
                 checkCodeStatus(parseError(xhr.responseText));
             }
         });
     }
 
     Client.prototype.command_set_reportTime = function() {
-        var value = $('#sensor-reportTime-status').val();
+        var value = $('#Sensor_reportTime-status').val();
         var resource = client.MapResource.ReportTime;
         var body = {
             [resource]: value
@@ -275,11 +275,11 @@ sensorApp = (function() {
                 dataType: 'json',
                 success: function(data) {
                     console.log(data);
-                    $('#sensor-measure-status').val(data.readings[0].value);
+                    $('#Sensor_measure-status').val(data.readings[0].value);
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
-                    $('#sensor-measure-status').val("");
+                    $('#Sensor_measure-status').val("");
                     checkCodeStatus(parseError(xhr.responseText));
                 }
             });

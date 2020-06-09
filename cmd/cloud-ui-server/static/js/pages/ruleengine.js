@@ -412,7 +412,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
 
         var newRule = {};
         newRule['id'] = name;
-        newRule['sql'] = "SELECT * FROM event WHERE meta(device) = \"" + condition_device_name + "\" AND \"" + parameter + "\" " + operation + " " + operand2;
+        newRule['sql'] = "SELECT * FROM event WHERE meta(device) = \"" + condition_device_name + "\" AND " + parameter + " " + operation + " " + operand2;
         newRule['actions'] = actions;
 
         console.log(JSON.stringify(newRule));
