@@ -77,27 +77,6 @@ lightApp = (function() {
     }
 
     var light = new Light();
-    var testRenderOnOff = [{
-        "owner": "group",
-        "time": 197900,
-        "value": true
-    }];
-    var testRenderDimming = [{
-        "owner": "group",
-        "time": 197888,
-        "value": 50
-    }];
-    var testRenderGroup = ["group1", "group2"];
-    var testRenderScenario = [{
-        "Parent": "S1",
-        "Element": "DemoDevice",
-        "Content": "{\"Command\": \"OnOff\", \"Body\": \"{\\\"Light_OnOff\\\":\\\"true\\\"}\"}"
-    }, {
-        "Parent": "S2",
-        "Element": "DemoDevice",
-        "Content": "{\"Command\": \"OnOff\", \"Body\": \"{\\\"Light_Dimming\\\":\\\"80\\\"}\"}"
-    }];
-
     // Device start  -----------------------------------------
     Light.prototype.loadDevice = function() {
         $.ajax({
@@ -112,13 +91,13 @@ lightApp = (function() {
     }
 
     Light.prototype.renderDevice = function(devices) {
-        $('#Light_command-main').hide();
-        $('#Light_device-list').show();
+        $('#light-command-main').hide();
+        $('#light-device-list').show();
 
-        $("#Light_device-list-table table tbody").empty();
-        $("#Light_device-list-table table tfoot").hide();
+        $("#light-device-list-table table tbody").empty();
+        $("#light-device-list-table table tfoot").hide();
         if (!devices || devices.length == 0) {
-            $("#Light_device-list-table table tfoot").show();
+            $("#light-device-list-table table tfoot").show();
             return;
         }
         $.each(devices, function(i, v) {
@@ -127,9 +106,9 @@ lightApp = (function() {
             rowData += "<td>" + (i + 1) + "</td>";
             rowData += '<td class="device-name">' + v.name + '</td>';
             if (v.adminState == "UNLOCKED") {
-                rowData += '<td><select class="Light_adminState"><option value="UNLOCKED" selected>UNLOCKED</option><option value="LOCKED">LOCKED</option></select></td>';
+                rowData += '<td><select class="light-adminState"><option value="UNLOCKED" selected>UNLOCKED</option><option value="LOCKED">LOCKED</option></select></td>';
             } else {
-                rowData += '<td><select class="Light_adminState"><option value="UNLOCKED">UNLOCKED</option><option value="LOCKED" selected>LOCKED</option></select></td>';
+                rowData += '<td><select class="light-adminState"><option value="UNLOCKED">UNLOCKED</option><option value="LOCKED" selected>LOCKED</option></select></td>';
             }
 
             var enableCommand = 0;
@@ -167,15 +146,15 @@ lightApp = (function() {
             }
 
             rowData += "</tr>";
-            $("#Light_device-list-table table tbody").append(rowData);
+            $("#light-device-list-table table tbody").append(rowData);
         });
 
 
-        $('#Light_device-list-table .Light_adminState').change(function() {
+        $('#light-device-list-table .light-adminState').change(function() {
             light.setAdminState($(this).closest('td').prev('td').html(), $(this).val());
         })
 
-        $("#Light_device-list-table .device-command-icon").on('click', function() {
+        $("#light-device-list-table .device-command-icon").on('click', function() {
             var deviceName = $(this).children('input').val();
             light.gotoCommand(deviceName);
         });
@@ -223,21 +202,21 @@ lightApp = (function() {
     // Command start  -----------------------------------------
     Light.prototype.gotoCommand = function(name) {
         light.currentSelectDevice = name;
-        $('#Light_currentDevice').html(name);
+        $('#light-currentDevice').html(name);
 
-        $('#Light_onoff-status').val("");
-        $('#Light_dimming-status').val("");
-        $('#Light_onoffScheduleTable tbody').empty();
-        $('#Light_dimmingScheduleTable tbody').empty();
-        $('#Light_groupTable tbody').empty();
-        $('#Light_scenarioTable tbody').empty();
+        $('#light-onoff-status').val("");
+        $('#light-dimming-status').val("");
+        $('#light-onoffScheduleTable tbody').empty();
+        $('#light-dimmingScheduleTable tbody').empty();
+        $('#light-groupTable tbody').empty();
+        $('#light-scenarioTable tbody').empty();
 
-        $('#Light_device-list').hide();
-        $('#Light_command-main').show("fast");
+        $('#light-device-list').hide();
+        $('#light-command-main').show("fast");
     }
     Light.prototype.cancelCommand = function() {
-        $('#Light_command-main').hide("fast");
-        $('#Light_device-list').show();
+        $('#light-command-main').hide("fast");
+        $('#light-device-list').show();
     }
 
     // Light start
@@ -248,18 +227,18 @@ lightApp = (function() {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
-                $('#Light_onoff-status').val(data.readings[0].value);
+                $('#light-onoff-status').val(data.readings[0].value);
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $('#Light_onoff-status').val("");
+                $('#light-onoff-status').val("");
                 checkCodeStatus(parseError(xhr.responseText));
             }
         });
     }
 
     Light.prototype.command_set_onoff = function() {
-        var value = $('#Light_onoff-status').val();
+        var value = $('#light-onoff-status').val();
         var resource = light.MapResource.OnOff;
         var body = {
             [resource]: value
@@ -289,18 +268,18 @@ lightApp = (function() {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
-                $('#Light_dimming-status').val(data.readings[0].value);
+                $('#light-dimming-status').val(data.readings[0].value);
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $('#Light_dimming-status').val("");
+                $('#light-dimming-status').val("");
                 checkCodeStatus(parseError(xhr.responseText));
             }
         });
     }
 
     Light.prototype.command_set_dimming = function() {
-        var value = $('#Light_dimming-status').val();
+        var value = $('#light-dimming-status').val();
         var resource = light.MapResource.Dimming;
         var body = {
             [resource]: value
@@ -329,18 +308,18 @@ lightApp = (function() {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
-                $('#Light_reportTime-status').val(data.readings[0].value);
+                $('#light-reportTime-status').val(data.readings[0].value);
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $('#Light_reportTime-status').val("");
+                $('#light-reportTime-status').val("");
                 checkCodeStatus(parseError(xhr.responseText));
             }
         });
     }
 
     Light.prototype.command_set_reportTime = function() {
-        var value = $('#Light_reportTime-status').val();
+        var value = $('#light-reportTime-status').val();
         var resource = light.MapResource.ReportTime;
         var body = {
             [resource]: value
@@ -382,8 +361,8 @@ lightApp = (function() {
 
     // OnOff Schedule start ------------------------
     Light.prototype.load_onoff_schedule = function() {
-        $("#Light_onoffScheduleTable table tfoot").hide();
-        $("#Light_onoffScheduleTable table tbody").empty();
+        $("#light-onoffScheduleTable table tfoot").hide();
+        $("#light-onoffScheduleTable table tbody").empty();
 
         // ajax ...
         $.ajax({
@@ -394,7 +373,7 @@ lightApp = (function() {
                 console.log(data);
                 var schedules = JSON.parse(data.readings[0].value);
                 if (!schedules || schedules.length == 0) {
-                    $("#Light_onoffScheduleTable table tfoot").show();
+                    $("#light-onoffScheduleTable table tfoot").show();
                     return;
                 }
 
@@ -413,30 +392,30 @@ lightApp = (function() {
                         rowData += '<td><input class="form-control" type="text" value="' + JSON.stringify(v.value) + '"  </input>';
                     }
                     rowData += '</tr>';
-                    $("#Light_onoffScheduleTable table tbody").append(rowData);
+                    $("#light-onoffScheduleTable table tbody").append(rowData);
                 });
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $("#Light_onoffScheduleTable table tfoot").show();
+                $("#light-onoffScheduleTable table tfoot").show();
             }
         });
     }
 
     Light.prototype.addRow_onoff_schedule = function() {
-        $("#Light_onoffScheduleTable table tfoot").hide();
+        $("#light-onoffScheduleTable table tfoot").hide();
         var rowData = '<tr>';
         rowData += '<td><input type="button" class="btn-danger" onclick="$(this).closest(\'tr\').remove();" value="x"></input>';
         rowData += '<td><input class="form-control" type="text" value="' + light.currentSelectDevice + '" disabled </input>';
         rowData += '<td><input class="form-control" type="text" value="00h00" </input>';
         rowData += '<td><input class="form-control" type="text" value="false" </input>';
         rowData += '</tr>';
-        $("#Light_onoffScheduleTable table tbody").append(rowData);
+        $("#light-onoffScheduleTable table tbody").append(rowData);
     }
 
     Light.prototype.submit_onoff_schedule = function() {
             var arrValues = [];
-            var rows = $('#Light_onoffScheduleTable table tr');
+            var rows = $('#light-onoffScheduleTable table tr');
 
             // loop through each row of the table.            
             for (var row = 1; row < rows.length - 1; row++) { // -1 vi co tr cua tfoot
@@ -486,8 +465,8 @@ lightApp = (function() {
 
     // Dimming Schedule start ------------------------
     Light.prototype.load_dimming_schedule = function() {
-        $("#Light_dimmingScheduleTable table tfoot").hide();
-        $("#Light_dimmingScheduleTable table tbody").empty();
+        $("#light-dimmingScheduleTable table tfoot").hide();
+        $("#light-dimmingScheduleTable table tbody").empty();
 
         // ajax ...
         $.ajax({
@@ -498,7 +477,7 @@ lightApp = (function() {
                 console.log(data);
                 var schedules = JSON.parse(data.readings[0].value);
                 if (!schedules || schedules.length == 0) {
-                    $("#Light_dimmingScheduleTable table tfoot").show();
+                    $("#light-dimmingScheduleTable table tfoot").show();
                     return;
                 }
 
@@ -517,30 +496,30 @@ lightApp = (function() {
                         rowData += '<td><input class="form-control" type="text" value="' + JSON.stringify(v.value) + '" </input>';
                     }
                     rowData += '</tr>';
-                    $("#Light_dimmingScheduleTable table tbody").append(rowData);
+                    $("#light-dimmingScheduleTable table tbody").append(rowData);
                 });
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $("#Light_dimmingScheduleTable table tfoot").show();
+                $("#light-dimmingScheduleTable table tfoot").show();
             }
         });
     }
 
     Light.prototype.addRow_dimming_schedule = function() {
-        $("#Light_dimmingScheduleTable table tfoot").hide();
+        $("#light-dimmingScheduleTable table tfoot").hide();
         var rowData = '<tr>';
         rowData += '<td><input type="button" class="btn-danger" onclick="$(this).closest(\'tr\').remove();" value="x"></input>';
         rowData += '<td><input class="form-control" type="text" value="' + light.currentSelectDevice + '" disabled </input>';
         rowData += '<td><input class="form-control" type="text" value="00h00" </input>';
         rowData += '<td><input class="form-control" type="text" value="0" </input>';
         rowData += '</tr>';
-        $("#Light_dimmingScheduleTable table tbody").append(rowData);
+        $("#light-dimmingScheduleTable table tbody").append(rowData);
     }
 
     Light.prototype.submit_dimming_schedule = function() {
             var arrValues = [];
-            var rows = $('#Light_dimmingScheduleTable table tr');
+            var rows = $('#light-dimmingScheduleTable table tr');
 
             // loop through each row of the table.            
             for (var row = 1; row < rows.length - 1; row++) { // -1 vi co tr cua tfoot
@@ -590,8 +569,8 @@ lightApp = (function() {
 
     // Group start ------------------------
     Light.prototype.load_group = function() {
-            $("#Light_groupTable table tfoot").hide();
-            $("#Light_groupTable table tbody").empty();
+            $("#light-groupTable table tfoot").hide();
+            $("#light-groupTable table tbody").empty();
 
             // ajax ...
             $.ajax({
@@ -602,7 +581,7 @@ lightApp = (function() {
                     console.log(data);
                     var groups = JSON.parse(data.readings[0].value);
                     if (!groups || groups.length == 0) {
-                        $("#Light_groupTable table tfoot").show();
+                        $("#light-groupTable table tfoot").show();
                         return;
                     }
 
@@ -612,12 +591,12 @@ lightApp = (function() {
                         rowData += '<td>' + (i + 1) + '</td>';
                         rowData += '<td><input class="form-control" type="text" disabled value="' + v + '"></td>';
                         rowData += '</tr>';
-                        $("#Light_groupTable table tbody").append(rowData);
+                        $("#light-groupTable table tbody").append(rowData);
                     });
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
-                    $("#Light_groupTable table tfoot").show();
+                    $("#light-groupTable table tfoot").show();
                 }
             });
         }
@@ -625,8 +604,8 @@ lightApp = (function() {
 
     // Scenario start ------------------------
     Light.prototype.load_scenario = function() {
-            $("#Light_scenarioTable table tfoot").hide();
-            $("#Light_scenarioTable table tbody").empty();
+            $("#light-scenarioTable table tfoot").hide();
+            $("#light-scenarioTable table tbody").empty();
 
             // ajax ...
             $.ajax({
@@ -637,7 +616,7 @@ lightApp = (function() {
                     console.log(data);
                     var scenarios = JSON.parse(data.readings[0].value);
                     if (!scenarios || scenarios.length == 0) {
-                        $("#Light_scenarioTable table tfoot").show();
+                        $("#light-scenarioTable table tfoot").show();
                         return;
                     }
 
@@ -659,12 +638,12 @@ lightApp = (function() {
                         rowData += '<td>' + bodyHtml + '</td>';
 
                         rowData += '</tr>';
-                        $("#Light_scenarioTable table tbody").append(rowData);
+                        $("#light-scenarioTable table tbody").append(rowData);
                     });
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
-                    $("#Light_groupTable table tfoot").show();
+                    $("#light-groupTable table tfoot").show();
                 }
             });
         }

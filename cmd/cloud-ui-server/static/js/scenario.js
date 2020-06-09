@@ -71,13 +71,13 @@ scenarioApp = (function() {
     }
 
     Client.prototype.renderDevice = function(devices) {
-            $('#Scenario_command-main').hide();
-            $('#Scenario_device-list').show();
+            $('#scenario-command-main').hide();
+            $('#scenario-device-list').show();
 
-            $("#Scenario_device-list-table table tbody").empty();
-            $("#Scenario_device-list-table table tfoot").hide();
+            $("#scenario-device-list-table table tbody").empty();
+            $("#scenario-device-list-table table tfoot").hide();
             if (!devices || devices.length == 0) {
-                $("#Scenario_device-list-table table tfoot").show();
+                $("#scenario-device-list-table table tfoot").show();
                 return;
             }
             $.each(devices, function(i, v) {
@@ -87,7 +87,7 @@ scenarioApp = (function() {
                 rowData += "<td>" + v.name + "</td>";
                 rowData += '<td><button class="btn btn-info fa fa-terminal fa-lg" onclick="scenarioApp.gotoCommand(\'' + v.name + '\')"></button></td>';
                 rowData += "</tr>";
-                $("#Scenario_device-list-table table tbody").append(rowData);
+                $("#scenario-device-list-table table tbody").append(rowData);
             });
         }
         // Device start  -----------------------------------------
@@ -95,17 +95,17 @@ scenarioApp = (function() {
     // Command start  -----------------------------------------
     Client.prototype.gotoCommand = function(name) {
         client.currentSelectDevice = name;
-        $('#Scenario_currentDevice').html(name);
+        $('#scenario-currentDevice').html(name);
 
-        $('#Scenario_elementTable tbody').empty();
+        $('#scenario-elementTable tbody').empty();
         $('#scenarioTable tbody').empty();
 
-        $('#Scenario_device-list').hide();
-        $('#Scenario_command-main').show("fast");
+        $('#scenario-device-list').hide();
+        $('#scenario-command-main').show("fast");
     }
     Client.prototype.cancelCommand = function() {
-        $('#Scenario_command-main').hide("fast");
-        $('#Scenario_device-list').show();
+        $('#scenario-command-main').hide("fast");
+        $('#scenario-device-list').show();
     }
 
     // Trigger start 
@@ -135,8 +135,8 @@ scenarioApp = (function() {
 
     // Element start ------------------------
     Client.prototype.load_element = function() {
-        $("#Scenario_elementTable table tfoot").hide();
-        $("#Scenario_elementTable table tbody").empty();
+        $("#scenario-elementTable table tfoot").hide();
+        $("#scenario-elementTable table tbody").empty();
 
         // ajax ...
         $.ajax({
@@ -147,7 +147,7 @@ scenarioApp = (function() {
                 console.log(data);
                 var elements = JSON.parse(data.readings[0].value);
                 if (!elements || elements.length == 0) {
-                    $("#Scenario_elementTable table tfoot").show();
+                    $("#scenario-elementTable table tfoot").show();
                     return;
                 }
 
@@ -169,8 +169,8 @@ scenarioApp = (function() {
 
                     var rowData = '<tr>';
                     rowData += '<td><input type="button" class="btn-danger" onclick="$(this).closest(\'tr\').remove();" value="x"></input></td>';
-                    rowData += '<td><select class="form-control" name="Scenario_elementNameSelect"><option value="' + v.Element + '">' + v.Element + '</option></select></td>';
-                    rowData += '<td><select class="form-control" name="Scenario_elementCommandSelect"><option value=\'' + JSON.stringify(command) + '\'>' + command.name + '</option></select></td>';
+                    rowData += '<td><select class="form-control" name="scenario-elementNameSelect"><option value="' + v.Element + '">' + v.Element + '</option></select></td>';
+                    rowData += '<td><select class="form-control" name="scenario-elementCommandSelect"><option value=\'' + JSON.stringify(command) + '\'>' + command.name + '</option></select></td>';
 
                     var body = JSON.parse(content.Body);
                     var bodyHtml = '<div>';
@@ -181,32 +181,32 @@ scenarioApp = (function() {
                     rowData += '<td>' + bodyHtml + '</td>';
 
                     rowData += '</tr>';
-                    $("#Scenario_elementTable table tbody").append(rowData);
+                    $("#scenario-elementTable table tbody").append(rowData);
                 });
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
-                $("#Scenario_elementTable table tfoot").show();
+                $("#scenario-elementTable table tfoot").show();
             }
         });
     }
 
     Client.prototype.addRow_element = function() {
-        $("#Scenario_elementTable table tfoot").hide();
+        $("#scenario-elementTable table tfoot").hide();
         var rowData = '<tr>';
         rowData += '<td><input type="button" class="btn-danger" onclick="$(this).closest(\'tr\').remove();" value="x"></input></td>';
-        rowData += '<td><select class="form-control" name="Scenario_elementNameSelect"><option value="">--select Element--</option>'
+        rowData += '<td><select class="form-control" name="scenario-elementNameSelect"><option value="">--select Element--</option>'
         $.each(client.DeviceCommandCache, function(i, dev) {
             rowData += '<option value="' + dev.name + '">' + dev.name + '</option>';
         });
         rowData += '</select></td>';
         // ------------------------------------------------------ render content -----------------------------------------------------            
-        rowData += '<td><select class="form-control" name="Scenario_elementCommandSelect"></td>';
+        rowData += '<td><select class="form-control" name="scenario-elementCommandSelect"></td>';
         rowData += '<td><div></div></td>';
         rowData += '</tr>';
 
-        $("#Scenario_elementTable table tbody").append(rowData);
-        $('#Scenario_elementTable select[name="Scenario_elementNameSelect"]').on('change', function() {
+        $("#scenario-elementTable table tbody").append(rowData);
+        $('#scenario-elementTable select[name="scenario-elementNameSelect"]').on('change', function() {
             var name = $(this).val();
             var nextTd = $(this).closest('td').next('td').find('select');
             nextTd.empty();
@@ -228,7 +228,7 @@ scenarioApp = (function() {
                 }
             });
         });
-        $('#Scenario_elementTable select[name="Scenario_elementCommandSelect"]').on('change', function() {
+        $('#scenario-elementTable select[name="scenario-elementCommandSelect"]').on('change', function() {
             var cmStr = $(this).val();
             var cm = JSON.parse(cmStr);
             var nextTd = $(this).closest('td').next('td').find('div');
@@ -241,7 +241,7 @@ scenarioApp = (function() {
 
     Client.prototype.submit_element = function() {
             var arrValues = [];
-            var rows = $('#Scenario_elementTable table tr');
+            var rows = $('#scenario-elementTable table tr');
 
             // loop through each row of the table.            
             for (var row = 1; row < rows.length - 1; row++) { // -1 vi khong tin th
