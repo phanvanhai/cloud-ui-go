@@ -229,7 +229,7 @@ groupApp = (function() {
 
     Client.prototype.command_set_dimming = function() {
             var value = $('#group-dimming-status').val();
-            var resource = client.MapResource.OnOff;
+            var resource = client.MapResource.Dimming;
             var body = {
                 [resource]: value
             };
