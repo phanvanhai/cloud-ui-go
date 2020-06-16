@@ -14,7 +14,7 @@ lightApp = (function() {
             OnOffSchedule: "OnOffSchedule",
             DimmingSchedule: "DimmingSchedule",
             Realtime: "Realtime",
-            LightMeasure: "LightMeasure",
+            LightSensor: "LightSensor",
             ReportTime: "ReportTime",
             Group: "Group",
             Scenario: "Scenario"
@@ -26,7 +26,7 @@ lightApp = (function() {
             DimmingSchedule: "Light_DimmingSchedule",
             ReportTime: "Light_ReportTime",
             Realtime: "Light_Realtime",
-            LightMeasure: "Light_LightMeasure",
+            LightSensor: "Light_LightSensor",
             Group: "Light_Group",
             Scenario: "Light_Scenario"
         };
@@ -343,7 +343,7 @@ lightApp = (function() {
 
     Light.prototype.command_get_measure = function() {
             $.ajax({
-                url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.LightMeasure,
+                url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.LightSensor,
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
