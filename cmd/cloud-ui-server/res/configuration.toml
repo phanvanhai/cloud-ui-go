@@ -63,7 +63,7 @@ Type = "mqtt"
         Port = 1883
         Protocol = "tcp"
     [MessageBus.PublishHost]        
-        Host = "192.168.1.14"
+        Host = "192.168.1.15"
         # Host = "broker.emqx.io"        
         Port = 	1883
         Protocol = "tcp"

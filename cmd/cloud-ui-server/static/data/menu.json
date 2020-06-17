@@ -22,11 +22,6 @@
     "icon": "fa fa-wrench",
     "children": []
 }, {
-    "title": "Connect",
-    "url": "/pages/userMqttService.html",
-    "icon": "fa fa-wifi",
-    "children": []
-}, {
     "title": "Monitor",
     "url": "/pages/reading.html",
     "icon": "fa fa-bar-chart",
@@ -50,7 +45,7 @@
         "icon": "fa fa-pencil-square-o fa-lg",
         "children": []
     }, {
-        "title": " Other",
+        "title": " Gateway",
         "url": "/pages/gatewayObject.html",
         "icon": "fa fa-bank",
         "children": []
