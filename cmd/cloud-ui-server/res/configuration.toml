@@ -37,11 +37,11 @@ TimePubSub = 30
     Port = 48085
     PathPrefix = "/support-scheduler"
 
-    [Clients.RuleEngine]
+    [Clients.RulesEngine]
     Protocol = 'http'
     Host = 'localhost'
     Port = 48075
-    PathPrefix = "/rule-engine"
+    PathPrefix = "/rules-engine"
 
     [Clients.Logging]
     Protocol = 'http'

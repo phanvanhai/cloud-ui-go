@@ -80,7 +80,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
     SupportRuleEngine.prototype.initRulesEngine = function() {
         // initialize stream
         $.ajax({
-            url: '/rule-engine/streams/event',
+            url: '/rules-engine/streams/event',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -93,7 +93,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
                 stream['sql'] = 'create stream event() WITH (FORMAT="JSON", TYPE="edgex")';
                 // console.log(JSON.stringify(stream));
                 $.ajax({
-                    url: '/rule-engine/streams',
+                    url: '/rules-engine/streams',
                     type: 'POST',
                     data: JSON.stringify(stream),
                     contentType: 'application/json',
@@ -199,7 +199,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
     SupportRuleEngine.prototype.loadRuleData = function() {
         ruleEngine.loadDevice();
         $.ajax({
-            url: '/rule-engine/rules',
+            url: '/rules-engine/rules',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -258,7 +258,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
 
     SupportRuleEngine.prototype.viewRule = function(id) {
         $.ajax({
-            url: '/rule-engine/rules/' + id,
+            url: '/rules-engine/rules/' + id,
             type: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -417,7 +417,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
 
         console.log(JSON.stringify(newRule));
         $.ajax({
-            url: '/rule-engine/rules',
+            url: '/rules-engine/rules',
             type: 'POST',
             data: JSON.stringify(newRule),
             contentType: 'application/json',
@@ -441,7 +441,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '/rule-engine/rules/' + rule,
+                        url: '/rules-engine/rules/' + rule,
                         type: 'DELETE',
                         success: function() {
                             bootbox.alert({
@@ -480,7 +480,7 @@ orgEdgexFoundry.supportRuleEngine = (function() {
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '/rule-engine/rules/' + action,
+                        url: '/rules-engine/rules/' + action,
                         type: 'POST',
                         success: function() {
                             bootbox.alert({

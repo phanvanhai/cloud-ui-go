@@ -36,11 +36,11 @@ StaticResourcesPath = "./static"
     Port = 48085
     PathPrefix = "/support-scheduler"
 
-    [Clients.RuleEngine]
+    [Clients.RulesEngine]
     Protocol = 'http'
     Host = 'edgex-kuiper'
     Port = 48075
-    PathPrefix = "/rule-engine"
+    PathPrefix = "/rules-engine"
 
     [Clients.Logging]
     Protocol = 'http'

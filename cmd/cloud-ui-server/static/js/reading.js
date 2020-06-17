@@ -16,7 +16,7 @@ monitor = (function() {
                 'reading': [
                     'Light_OnOff',
                     'Light_Dimming',
-                    'Light_LightMeasure'
+                    'Light_LightSensor'
                 ]
             },
             {
