@@ -8,6 +8,7 @@ lightApp = (function() {
 
     function Light() {
         this.Profile = "Light";
+        this.DeviceService = "device_zigbee";
         this.MapCommand = {
             OnOff: "OnOff",
             Dimming: "Dimming",
@@ -31,6 +32,7 @@ lightApp = (function() {
             Scenario: "Light_Scenario"
         };
         this.currentSelectDevice = "";
+        this.currentProtocols = null;
     }
 
     Light.prototype = {
@@ -41,6 +43,11 @@ lightApp = (function() {
         renderDevice: null,
         tryOpState: null,
         setAdminState: null,
+        editDevice: null,
+        addDevice: null,
+        cancelAddOrUpdateDevice: null,
+        uploadDevice: null,
+        deleteDevice: null,
 
         // Command
         gotoCommand: null,
@@ -102,9 +109,15 @@ lightApp = (function() {
         }
         $.each(devices, function(i, v) {
             var rowData = "<tr>";
-            rowData += '<td></td>';
+            rowData += '<td class="device-delete-icon"><input type="hidden" value=\'' + JSON.stringify(v) + '\'><div class="btn btn-danger fa fa-trash"></div></td>';
+            rowData += '<td class="device-edit-icon"><input type="hidden" value=\'' + JSON.stringify(v) + '\'><div class="btn btn-warning fa fa-edit"></div></td>';
             rowData += "<td>" + (i + 1) + "</td>";
-            rowData += '<td class="device-name">' + v.name + '</td>';
+            rowData += "<td>" + v.name + "</td>";
+            rowData += "<td>" + v.description + "</td>";
+            rowData += "<td>" + v.labels + "</td>";
+            rowData += "<td>" + dateToString(v.created) + "</td>";
+            rowData += "<td>" + dateToString(v.modified) + "</td>";
+
             if (v.adminState == "UNLOCKED") {
                 rowData += '<td><select class="light-adminState"><option value="UNLOCKED" selected>UNLOCKED</option><option value="LOCKED">LOCKED</option></select></td>';
             } else {
@@ -149,6 +162,15 @@ lightApp = (function() {
             $("#light-device-list-table table tbody").append(rowData);
         });
 
+        $("#light-device-list-table .device-delete-icon").on('click', function() {
+            var device = JSON.parse($(this).children('input').val());
+            light.deleteDevice(device);
+        });
+
+        $("#light-device-list-table .device-edit-icon").on('click', function() {
+            var device = JSON.parse($(this).children('input').val());
+            light.editDevice(device);
+        });
 
         $('#light-device-list-table .light-adminState').change(function() {
             light.setAdminState($(this).closest('td').prev('td').html(), $(this).val());
@@ -180,20 +202,174 @@ lightApp = (function() {
     }
 
     Light.prototype.setAdminState = function(name, value) {
-            var body = {
-                adminState: value
-            };
-            $.ajax({
-                url: '/core-metadata/api/v1/device/name/' + name,
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(body),
-                dataType: 'text',
-                success: function(data) {
-                    alert("trying... Reload after few seconds");
+        var body = {
+            adminState: value
+        };
+        $.ajax({
+            url: '/core-metadata/api/v1/device/name/' + name,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(body),
+            dataType: 'text',
+            success: function(data) {
+                alert("trying... Reload after few seconds");
+            },
+            error: function(xhr, status, error) {
+                alert(error + '\n' + xhr.responseText);
+            }
+        });
+    }
+
+    Light.prototype.editDevice = function(device) {
+        light.currentProtocols = device.protocols;
+        $('#light-deviceID').val(device.id);
+        $('#light-deviceName').val(device.name);
+        $('#light-deviceDescription').val(device.description);
+        $('#light-deviceLabels').val(device.labels ? device.labels.join(',') : '');
+        $('#light-adminState').val(device.adminState);
+        $('#light-operatingState').val(device.operatingState);
+
+        $('#light-type').val(device.protocols["General"]["Type"]);
+        $('#light-versionConfig').val(device.protocols["General"]["VersionConfig"]);
+        $('#light-networkID').val(device.protocols["General"]["NetworkID"]);
+        $('#light-linkKey').val(device.protocols["General"]["NetworkLinkKey"]);
+        $('#light-mac').val(device.protocols["General"]["NetworkMAC"]);
+
+        $('#light-command-main').hide();
+        $('#light-device-list').hide();
+        $("#light-device-update-or-add .add-device").hide();
+        $("#light-device-update-or-add .update-device").show();
+        $("#light-device-update-or-add").show();
+    };
+
+    Light.prototype.addDevice = function() {
+        $('#light-command-main').hide();
+        $('#light-device-list').hide();
+        $("#light-device-update-or-add").show();
+        $("#light-device-update-or-add .update-device").hide();
+        $("#light-device-update-or-add .add-device").show();
+        $(".edgexfoundry-device-form")[0].reset();
+        $('#light-type').val("Device");
+        $('#light-versionConfig').val("");
+    };
+
+    Light.prototype.cancelAddOrUpdateDevice = function() {
+        $("#light-device-update-or-add").hide();
+        $('#light-command-main').hide();
+        $('#light-device-list').show();
+
+    };
+
+    Light.prototype.uploadDevice = function(type) {
+        var method;
+        if (type == "new") {
+            method = "POST";
+            light.currentProtocols = {};
+        } else {
+            method = "PUT";
+        }
+
+        var property = {
+            "Type": $('#light-type').val(),
+            "VersionConfig": $('#light-versionConfig').val(),
+            "NetworkID": $('#light-networkID').val(),
+            "NetworkLinkKey": $('#light-linkKey').val(),
+            "NetworkMAC": $('#light-mac').val()
+        }
+        light.currentProtocols["General"] = property;
+
+        var device = {
+            id: $('#light-deviceID').val(),
+            name: $('#light-deviceName').val().trim(),
+            description: $('#light-deviceDescription').val(),
+            labels: $('#light-deviceLabels').val().split(','),
+            adminState: $('#light-adminState').val(),
+            operatingState: $('#light-operatingState').val(),
+            protocols: light.currentProtocols,
+            service: {
+                name: light.DeviceService,
+            },
+            profile: {
+                name: light.Profile,
+            }
+        };
+
+        console.log(device);
+
+        $.ajax({
+            url: '/core-metadata/api/v1/device',
+            type: method,
+            contentType: 'application/json',
+            data: JSON.stringify(device),
+            success: function() {
+                light.cancelAddOrUpdateDevice();
+                light.loadDevice();
+                bootbox.alert({
+                    message: "commit success!",
+                    className: 'red-green-buttons'
+                });
+            },
+            statusCode: {
+                400: function() {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "the request is malformed or unparsable or if an associated object (Addressable, Profile, Service) cannot be found with the id or name provided !",
+                        className: 'red-green-buttons'
+                    });
                 },
-                error: function(xhr, status, error) {
-                    alert(error + '\n' + xhr.responseText);
+                409: function() {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "the name is determined to not be unique with regard to others !",
+                        className: 'red-green-buttons'
+                    });
+                },
+                500: function() {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "unknown or unanticipated issues !",
+                        className: 'red-green-buttons'
+                    });
+                }
+            }
+        });
+    }
+
+    Light.prototype.deleteDevice = function(device) {
+            bootbox.confirm({
+                title: "confirm",
+                message: "Are you sure to remove device? ",
+                className: 'green-red-buttons',
+                callback: function(result) {
+                    if (result) {
+                        $.ajax({
+                            url: '/core-metadata/api/v1/device/id/' + device.id,
+                            type: 'DELETE',
+                            success: function() {
+                                bootbox.alert({
+                                    message: "remove device success !",
+                                    className: 'red-green-buttons'
+                                });
+                                light.loadDevice();
+                            },
+                            statusCode: {
+                                400: function() {
+                                    bootbox.alert({
+                                        title: "Error",
+                                        message: " incorrect or unparsable requests !",
+                                        className: 'red-green-buttons'
+                                    });
+                                },
+                                404: function() {
+                                    bootbox.alert({
+                                        title: "Error",
+                                        message: " the device cannot be found by the id provided !",
+                                        className: 'red-green-buttons'
+                                    });
+                                },
+                            }
+                        });
+                    }
                 }
             });
         }

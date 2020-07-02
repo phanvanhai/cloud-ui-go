@@ -23,16 +23,19 @@
                     <div>
                         <form class="form-inline">
                             &nbsp; Device: &nbsp;
-                            <select name="monitor-selectDevice" id="monitor-selectDevice" class="form-control">                                 
-                </select> &nbsp; Reading: &nbsp;
-                            <select name="monitor-selectReading" id="monitor-selectReading" class="form-control">                   
-                </select> &nbsp; limit &nbsp; <select id="monitor-limit" class="form-control">
-                    <option>10</option>
-                    <option>50</option>
-                    <option>100</option>
-                    <option>300</option>
-                    <option>500</option>
-                </select> &nbsp;&nbsp;
+                            <select name="monitor-selectDevice" id="monitor-selectDevice" class="form-control"></select> &nbsp; Reading: &nbsp;
+                            <select name="monitor-selectReading" id="monitor-selectReading" class="form-control"></select> &nbsp; from &nbsp;
+                            <input id="monitor-start_time" type="text" class="form-control"> &nbsp; to &nbsp;
+                            <input id="monitor-end_time" type="text" class="form-control">
+                            <!-- limit &nbsp; -->
+                            <select id="monitor-limit" class="form-control" style="display:none;">
+                                <option>10</option>
+                                <option>50</option>
+                                <option>100</option>
+                                <option>300</option>
+                                <option>500</option>
+                                <option selected>50000</option>
+                            </select> &nbsp;&nbsp;
                             <i id="monitor-search" style="color:green;" onclick="monitor.searchBtn()" class="fa fa-search fa-lg" aria-hidden="true"></i> &nbsp;&nbsp;
                             <i id="monitor-start-monitor" style="color:green;" onclick="monitor.startMonitor()" class="fa fa-tv fa-lg" aria-hidden="true" data-toggle="log-tooltip" data-placement="right" title="Monitor,click start."></i>
                             <i id="monitor-stop-monitor" style="display:none;color:red;" onclick="monitor.stopMonitor()" class="fa fa-tv fa-lg" aria-hidden="true" data-toggle="log-tooltip" data-placement="right" title="Monitor Recording.">&nbsp;&nbsp;&nbsp;</i>                            &nbsp;&nbsp;

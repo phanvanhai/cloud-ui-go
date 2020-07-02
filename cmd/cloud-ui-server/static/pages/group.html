@@ -13,7 +13,9 @@
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        Groups &nbsp; <button class="btn btn-info fa fa-refresh" onclick="groupApp.loadDevice();"></button>
+                        Groups &nbsp;
+                        <button class="btn btn-info fa fa-refresh" onclick="groupApp.loadDevice();"></button>
+                        <button class="btn btn-success fa fa-plus" onclick="groupApp.addDevice();"></button>
                     </h3>
                 </div>
                 <div class="panel panel-default" style="border:none;outline:none;margin:0;">
@@ -24,9 +26,14 @@
                         <table class="table table-responsive table-hover table-striped">
                             <thead>
                                 <tr class="active">
-                                    <th></th>
-                                    <th>#</th>
+                                    <th style="width: 50px;"></th>
+                                    <th style="width: 50px;"></th>
+                                    <th style="width: 50px;">#</th>
                                     <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Labels</th>
+                                    <th>Created Time</th>
+                                    <th>Modified Time</th>
                                     <th>Commands</th>
                                 </tr>
                             </thead>
@@ -43,6 +50,53 @@
             </div>
             <!-- device list end -->
         </div>
+
+        <!-- device update or add start -->
+        <div id='group-device-update-or-add' style="display:none; ">
+            <div class="panel panel-success ">
+                <div class="panel-heading ">
+                    <h3 class="panel-title ">Add or Update Scenario</h3>
+                </div>
+                <div class="panel panel-default " style="border:none;outline:none;margin:0; ">
+                    <div class="panel-heading " style="padding:5px 2px; ">
+                        <div class="edgexIconBtn add-device " onclick="groupApp.uploadDevice( 'new'); ">
+                            <i class="fa fa-check fa-lg " aria-hidden="true "></i>
+                        </div>
+                        <div class="edgexIconBtn update-device " style="display:none; " onclick="groupApp.uploadDevice(); ">
+                            <i class="fa fa-check fa-lg " aria-hidden="true "></i>
+                        </div>
+                        <div class="edgexIconBtn " onclick="groupApp.cancelAddOrUpdateDevice() ">
+                            <i class="fa fa-close fa-lg " aria-hidden="true "></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body " style="padding:0;width:100%;overflow:auto; ">
+                    <form class='edgexfoundry-device-form' style="width:100%; ">
+                        <fieldset>
+                            <legend>Device</legend>
+                            <table>
+                                <tr>
+                                    <td>ID</td>
+                                    <td class="col-sm-6 "><input class='form-control' type='text' id='group-deviceID' disabled value=''></td>
+                                    <td style="width: 50px; "></td>
+                                    <td>Name</td>
+                                    <td class="col-sm-6 "><input class='form-control' type='text' id='group-deviceName' value=''></td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <td class="col-sm-6 "><input class='form-control' type='text' id='group-deviceDescription' value=''></td>
+                                    <td style="width: 50px; "></td>
+                                    <td>Labels</td>
+                                    <td class="col-sm-6 "><input class='form-control' type='text' id='group-deviceLabels' placeholder='label1,label2' value=''></td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- device update or add end -->
 
         <!-- command start -->
         <div id="command-main" hidden>

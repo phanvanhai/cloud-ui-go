@@ -9,6 +9,7 @@ scenarioApp = (function() {
 
     function Client() {
         this.Profile = "Scenario";
+        this.DeviceService = "device_zigbee";
         this.DeviceCommandCache = [];
         this.MapCommand = {
             Trigger: "Trigger",
@@ -19,6 +20,7 @@ scenarioApp = (function() {
             Content: "Scenario_Content",
         };
         this.currentSelectDevice = "";
+        this.currentProtocols = null;
     }
 
     Client.prototype = {
@@ -30,6 +32,11 @@ scenarioApp = (function() {
         // Device
         loadDevice: null,
         renderDevice: null,
+        editDevice: null,
+        addDevice: null,
+        cancelAddOrUpdateDevice: null,
+        uploadDevice: null,
+        deleteDevice: null,
 
         // Command
         gotoCommand: null,
@@ -71,23 +78,176 @@ scenarioApp = (function() {
     }
 
     Client.prototype.renderDevice = function(devices) {
-            $('#scenario-command-main').hide();
-            $('#scenario-device-list').show();
+        $('#scenario-command-main').hide();
+        $("#scenario-device-update-or-add").hide();
+        $('#scenario-device-list').show();
 
-            $("#scenario-device-list-table table tbody").empty();
-            $("#scenario-device-list-table table tfoot").hide();
-            if (!devices || devices.length == 0) {
-                $("#scenario-device-list-table table tfoot").show();
-                return;
+        $("#scenario-device-list-table table tbody").empty();
+        $("#scenario-device-list-table table tfoot").hide();
+        if (!devices || devices.length == 0) {
+            $("#scenario-device-list-table table tfoot").show();
+            return;
+        }
+        $.each(devices, function(i, v) {
+            var rowData = "<tr>";
+            rowData += '<td class="device-delete-icon"><input type="hidden" value=\'' + JSON.stringify(v) + '\'><div class="btn btn-danger fa fa-trash"></div></td>';
+            rowData += '<td class="device-edit-icon"><input type="hidden" value=\'' + JSON.stringify(v) + '\'><div class="btn btn-warning fa fa-edit"></div></td>';
+            rowData += "<td>" + (i + 1) + "</td>";
+            rowData += "<td>" + v.name + "</td>";
+            rowData += "<td>" + v.description + "</td>";
+            rowData += "<td>" + v.labels + "</td>";
+            rowData += "<td>" + dateToString(v.created) + "</td>";
+            rowData += "<td>" + dateToString(v.modified) + "</td>";
+            rowData += '<td><button class="btn btn-info fa fa-terminal fa-lg" onclick="scenarioApp.gotoCommand(\'' + v.name + '\')"></button></td>';
+            rowData += "</tr>";
+            $("#scenario-device-list-table table tbody").append(rowData);
+        });
+
+        $("#scenario-device-list-table .device-delete-icon").on('click', function() {
+            var device = JSON.parse($(this).children('input').val());
+            client.deleteDevice(device);
+        });
+
+        $("#scenario-device-list-table .device-edit-icon").on('click', function() {
+            var device = JSON.parse($(this).children('input').val());
+            client.editDevice(device);
+        });
+    }
+
+    Client.prototype.editDevice = function(device) {
+        client.currentProtocols = device.protocols;
+        $('#scenario-deviceID').val(device.id);
+        $('#scenario-deviceName').val(device.name);
+        $('#scenario-deviceDescription').val(device.description);
+        $('#scenario-deviceLabels').val(device.labels ? device.labels.join(',') : '');
+
+        $('#scenario-command-main').hide();
+        $('#scenario-device-list').hide();
+        $("#scenario-device-update-or-add .add-device").hide();
+        $("#scenario-device-update-or-add .update-device").show();
+        $("#scenario-device-update-or-add").show();
+    };
+
+    Client.prototype.addDevice = function() {
+        $('#scenario-command-main').hide();
+        $('#scenario-device-list').hide();
+        $("#scenario-device-update-or-add").show();
+        $("#scenario-device-update-or-add .update-device").hide();
+        $("#scenario-device-update-or-add .add-device").show();
+        $(".edgexfoundry-device-form")[0].reset();
+    };
+
+    Client.prototype.cancelAddOrUpdateDevice = function() {
+        $("#scenario-device-update-or-add").hide();
+        $('#scenario-command-main').hide();
+        $('#scenario-device-list').show();
+
+    };
+
+    Client.prototype.uploadDevice = function(type) {
+        var method;
+        if (type == "new") {
+            method = "POST";
+            client.currentProtocols = {
+                "General": {
+                    "Type": "Scenario"
+                },
             }
-            $.each(devices, function(i, v) {
-                var rowData = "<tr>";
-                rowData += '<td></td>';
-                rowData += "<td>" + (i + 1) + "</td>";
-                rowData += "<td>" + v.name + "</td>";
-                rowData += '<td><button class="btn btn-info fa fa-terminal fa-lg" onclick="scenarioApp.gotoCommand(\'' + v.name + '\')"></button></td>';
-                rowData += "</tr>";
-                $("#scenario-device-list-table table tbody").append(rowData);
+        } else {
+            method = "PUT";
+        }
+
+        var device = {
+            id: $('#scenario-deviceID').val(),
+            name: $('#scenario-deviceName').val().trim(),
+            description: $('#scenario-deviceDescription').val(),
+            labels: $('#scenario-deviceLabels').val().split(','),
+            adminState: "UNLOCKED",
+            operatingState: "ENABLED",
+            protocols: client.currentProtocols,
+            service: {
+                name: client.DeviceService,
+            },
+            profile: {
+                name: client.Profile,
+            }
+        };
+
+        $.ajax({
+            url: '/core-metadata/api/v1/device',
+            type: method,
+            contentType: 'application/json',
+            data: JSON.stringify(device),
+            success: function() {
+                client.cancelAddOrUpdateDevice();
+                client.loadDevice();
+                bootbox.alert({
+                    message: "commit success!",
+                    className: 'red-green-buttons'
+                });
+            },
+            statusCode: {
+                400: function() {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "the request is malformed or unparsable or if an associated object (Addressable, Profile, Service) cannot be found with the id or name provided !",
+                        className: 'red-green-buttons'
+                    });
+                },
+                409: function() {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "the name is determined to not be unique with regard to others !",
+                        className: 'red-green-buttons'
+                    });
+                },
+                500: function() {
+                    bootbox.alert({
+                        title: "Error",
+                        message: "unknown or unanticipated issues !",
+                        className: 'red-green-buttons'
+                    });
+                }
+            }
+        });
+    }
+
+    Client.prototype.deleteDevice = function(device) {
+            bootbox.confirm({
+                title: "confirm",
+                message: "Are you sure to remove device? ",
+                className: 'green-red-buttons',
+                callback: function(result) {
+                    if (result) {
+                        $.ajax({
+                            url: '/core-metadata/api/v1/device/id/' + device.id,
+                            type: 'DELETE',
+                            success: function() {
+                                bootbox.alert({
+                                    message: "remove device success !",
+                                    className: 'red-green-buttons'
+                                });
+                                client.loadDevice(device.service.name);
+                            },
+                            statusCode: {
+                                400: function() {
+                                    bootbox.alert({
+                                        title: "Error",
+                                        message: " incorrect or unparsable requests !",
+                                        className: 'red-green-buttons'
+                                    });
+                                },
+                                404: function() {
+                                    bootbox.alert({
+                                        title: "Error",
+                                        message: " the device cannot be found by the id provided !",
+                                        className: 'red-green-buttons'
+                                    });
+                                },
+                            }
+                        });
+                    }
+                }
             });
         }
         // Device start  -----------------------------------------

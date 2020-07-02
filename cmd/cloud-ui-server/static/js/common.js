@@ -37,7 +37,7 @@ var dateToString = function(num) {
 
 Date.prototype.Format = function(fmt) {
     var o = {
-        "M+": this.getMonth(), // Month
+        "M+": this.getMonth() + 1, // Month
         "d+": this.getDate(), // Day
         "h+": this.getHours(), // Hour
         "m+": this.getMinutes(), // Minute

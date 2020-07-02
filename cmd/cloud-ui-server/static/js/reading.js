@@ -1,5 +1,19 @@
 $(document).ready(function() {
     $('[data-toggle="log-tooltip"]').tooltip();
+    $("#monitor-start_time").flatpickr({
+        dateFormat: "Y-m-d H:i:S",
+        enableTime: true,
+        enableSeconds: true,
+        time_24hr: true,
+        allowInput: false
+    });
+    $("#monitor-end_time").flatpickr({
+        dateFormat: "Y-m-d H:i:S",
+        enableTime: true,
+        enableSeconds: true,
+        time_24hr: true,
+        allowInput: false
+    });
     //init select panel
     monitor.loadDevice();
     monitor.initChart();
@@ -106,8 +120,14 @@ monitor = (function() {
     Monitor.prototype.searchBtn = function() {
         var device = $('#monitor-selectDevice').val();
         var name = $('#monitor-selectReading').val();
+        var start = $("#monitor-start_time").val();
+        var end = $("#monitor-end_time").val();
+        start = new Date(start).valueOf();
+        end = new Date(end).valueOf();
         var limit = $('#monitor-limit').val();
-        var url = '/core-data/api/v1/reading/name/' + name + '/device/' + device + '/' + limit;
+
+        // var url = '/core-data/api/v1/reading/name/' + name + '/device/' + device + '/' + limit;
+        var url = '/core-data/api/v1/reading/' + start + '/' + end + '/' + limit;
 
         console.log('send request: \nGET \n' + url);
         $.ajax({
@@ -116,11 +136,7 @@ monitor = (function() {
             dataType: 'json',
             success: function(data) {
                 $("#log-content div.log_content").empty();
-                if (!data || data.length == 0) {
-                    $("#log-content div.log_content").append('<span style="color:white;">No data.</span>');
-                    return;
-                }
-                client.renderReading(data);
+                client.renderReading(data, start, end, device, name);
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
@@ -128,16 +144,22 @@ monitor = (function() {
         });
     }
 
-    Monitor.prototype.renderReading = function(data) {
-        // $.each(data, function(i, v) {
-        //     var show_log = '<p>';
-        //     show_log += '<span style="color:green;">' + dateToString(v.created) + '</span>&nbsp;&nbsp;&nbsp;';
-        //     show_log += '<span style="color:green;">' + v.name + '</span>&nbsp;&nbsp;&nbsp;';
-        //     show_log += '<span style="color:white;">' + v.value + '</span>';
-        //     show_log += '</p>'
-        //     $("#log-content div.log_content").append(show_log);
-        // });
-        client.updateChart(data);
+    Monitor.prototype.renderReading = function(data, start, end, device, name) {
+        if (!data || data.length == 0) {
+            $("#log-content div.log_content").append('<span style="color:white;">No data.</span>');
+            return;
+        }
+        var readings = [];
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].created >= start && data[i].created <= end && data[i].device == device && data[i].name == name) {
+                readings.push(data[i]);
+            }
+        }
+        if (!readings || readings.length == 0) {
+            $("#log-content div.log_content").append('<span style="color:white;">No data.</span>');
+            return;
+        }
+        client.updateChart(readings);
     }
 
     Monitor.prototype.startMonitor = function() {
@@ -145,7 +167,7 @@ monitor = (function() {
         $("#monitor-search").hide();
         $("#monitor-start-monitor").hide();
         $("#monitor-stop-monitor").show();
-        client.monitorTimer = window.setInterval("monitor.searchBtn()", 2000);
+        client.monitorTimer = window.setInterval("monitor.searchBtn()", 5000);
     }
 
     Monitor.prototype.stopMonitor = function() {
@@ -166,8 +188,10 @@ monitor = (function() {
             },
             yAxis: { name: 'Reading Value' },
             series: [{
+                areaStyle: {
+                    color: 'pink'
+                },
                 type: 'line',
-                // smooth: true,
                 data: []
             }]
         };
@@ -180,23 +204,70 @@ monitor = (function() {
         var device = $('#monitor-selectDevice').val();
         var name = $('#monitor-selectReading').val();
 
+        if (!readings || readings.length == 0) {
+            var option = {
+                title: { text: 'Chart of Device: ' + device },
+                tooltip: {},
+                xAxis: {
+                    name: 'Time',
+                    type: 'time'
+                },
+                yAxis: {
+                    name: name,
+                    type: 'value'
+                },
+                series: [{
+                    type: 'line',
+                    // smooth: true,
+                    data: []
+                }]
+            };
+            client.chart.setOption(option);
+            return;
+        }
+
+        var Sn, Tn, ti_1, vi_1, Vtb;
+        Sn = 0;
+        Vtb = 0;
+        vi_1 = 0;
+        ti_1 = readings[0].created;
+        Tn = readings[readings.length - 1].created - readings[0].created;
+
         var dim2 = [];
         for (var i = 0; i < readings.length; i++) {
             if (readings[i].valueType == 'Bool') {
-                var value = (readings[i].value == 'true');
-                var time = new Date(readings[i].origin / 1000000);
-                dim2.push([time, value]);
+                var vi = (readings[i].value == 'true');
+                var ti = new Date(readings[i].created);
+                // Sn = (t1-t0)*v0 + (t2-t1)*v1 + ... + (tn-1 - tn-2)*vn-1
+                Sn = Sn + (ti - ti_1) * vi_1;
+                vi_1 = vi;
+                ti_1 = ti;
+                dim2.push([ti, vi]);
             } else {
-                var value = parseInt(readings[i].value);
-                var time = new Date(readings[i].origin / 1000000);
-                dim2.push([time, value]);
+                var vi = parseInt(readings[i].value);
+                var ti = new Date(readings[i].created);
+                // Sn = (t1-t0)*v0 + (t2-t1)*v1 + ... + (tn-1 - tn-2)*vn-1                
+                Sn = Sn + (ti - ti_1) * vi_1;
+                vi_1 = vi;
+                ti_1 = ti;
+                dim2.push([ti, vi]);
             }
         }
 
+        if (Tn == 0) {
+            Tn = 1;
+            Sn = vi_1;
+        }
+        Vtb = (Sn / Tn).toFixed(2);
+
         var option = {
-            title: { text: 'Chart of Device: ' + device },
+            title: {
+                text: 'Device: ' + device + '    Number of values: ' + readings.length + '    Mean: ' + Vtb,
+                left: 'center'
+            },
             tooltip: {},
             xAxis: {
+                boundaryGap: false,
                 name: 'Time',
                 type: 'time'
             },
@@ -205,8 +276,17 @@ monitor = (function() {
                 type: 'value'
             },
             series: [{
+                // label: {
+                //     normal: {
+                //         show: true,
+                //         position: 'top'
+                //     }
+                // },                
+                areaStyle: {
+                    color: 'pink'
+                },
                 type: 'line',
-                // smooth: true,
+                step: 'end',
                 data: dim2
             }]
         };

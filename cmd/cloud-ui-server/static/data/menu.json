@@ -44,10 +44,5 @@
         "url": "/pages/scenario.html",
         "icon": "fa fa-pencil-square-o fa-lg",
         "children": []
-    }, {
-        "title": " Gateway",
-        "url": "/pages/gatewayObject.html",
-        "icon": "fa fa-bank",
-        "children": []
     }]
 }]
