@@ -153,7 +153,12 @@
                         <legend>Light </legend>
                         <div class="form-inline">
                             <label for="light-onoff-status">On-Off :</label>
-                            <input id="light-onoff-status" type="text" style="width: 100px;">
+                            <!-- <input id="light-onoff-status" type="text" style="width: 100px;"> -->
+                            <select id='light-onoff-status' name="light-onoff-status">
+                                <option value="" selected>Unknow</option>
+                                <option value="true">On</option>
+                                <option value="false">Off</option>
+                            </select>
                             <button class="btn btn-info fa fa-refresh" onclick="lightApp.command_get_onoff();"></button>&nbsp;&nbsp;
                             <button class="btn btn-success fa fa-check" onclick="lightApp.command_set_onoff();"></button> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <label for="light-dimming-status">Dimming :</label>

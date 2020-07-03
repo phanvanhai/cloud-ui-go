@@ -102,8 +102,13 @@ orgEdgexFoundry.supportRuleEngine = (function() {
                         alert("Khoi tao thong tin thanh cong!");
                     },
                     error: function(xhr, status, error) {
-                        console.log(error + '\n' + xhr.responseText);
-                        alert(error + '\n' + xhr.responseText);
+                        if (xhr.responseText.includes("201") == true) {
+                            console.log("create stream success!");
+                            alert("Khoi tao thong tin thanh cong!");
+                        } else {
+                            console.log(error + '\n' + xhr.responseText);
+                            alert(error + '\n' + xhr.responseText);
+                        }
                     }
                 });
             }

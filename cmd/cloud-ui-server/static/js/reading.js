@@ -129,7 +129,7 @@ monitor = (function() {
         // var url = '/core-data/api/v1/reading/name/' + name + '/device/' + device + '/' + limit;
         var url = '/core-data/api/v1/reading/' + start + '/' + end + '/' + limit;
 
-        console.log('send request: \nGET \n' + url);
+        console.log('GET request: url:' + url);
         $.ajax({
             url: url,
             type: 'GET',

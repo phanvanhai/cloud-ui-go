@@ -25,7 +25,7 @@ TimePubSub = 30
     Port = 48082
     PathPrefix = "/core-command"
 
-    [Clients.Notification]
+    [Clients.Notifications]
     Protocol = 'http'
     Host = 'edgex-support-notifications'
     Port = 48060

@@ -249,6 +249,18 @@ lightApp = (function() {
         $("#light-device-update-or-add .update-device").hide();
         $("#light-device-update-or-add .add-device").show();
         $(".edgexfoundry-device-form")[0].reset();
+        $('#light-deviceID').val("");
+        $('#light-deviceName').val("");
+        $('#light-deviceDescription').val("");
+        $('#light-deviceLabels').val("");
+        $('#light-adminState').val("UNLOCKED");
+        $('#light-operatingState').val("ENABLED");
+
+        $('#light-type').val("");
+        $('#light-versionConfig').val("");
+        $('#light-networkID').val("");
+        $('#light-linkKey').val("");
+        $('#light-mac').val("");
         $('#light-type').val("Device");
         $('#light-versionConfig').val("");
     };
@@ -397,6 +409,7 @@ lightApp = (function() {
 
     // Light start
     Light.prototype.command_get_onoff = function() {
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.OnOff);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.OnOff,
             type: 'GET',
@@ -419,6 +432,7 @@ lightApp = (function() {
         var body = {
             [resource]: value
         };
+        console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.OnOff);
         console.log(JSON.stringify(body));
         // ajax ...
         $.ajax({
@@ -428,7 +442,12 @@ lightApp = (function() {
             data: JSON.stringify(body),
             dataType: 'text',
             success: function(data) {
-                alert("success");
+                console.log(data);
+                if (data == "") {
+                    alert("success");
+                } else {
+                    alert(data);
+                }
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
@@ -438,6 +457,7 @@ lightApp = (function() {
     }
 
     Light.prototype.command_get_dimming = function() {
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Dimming);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Dimming,
             type: 'GET',
@@ -460,6 +480,7 @@ lightApp = (function() {
         var body = {
             [resource]: value
         };
+        console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Dimming);
         console.log(JSON.stringify(body));
         $.ajax({
             url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Dimming,
@@ -468,7 +489,12 @@ lightApp = (function() {
             data: JSON.stringify(body),
             dataType: 'text',
             success: function(data) {
-                alert("success");
+                console.log(data);
+                if (data == "") {
+                    alert("success");
+                } else {
+                    alert(data);
+                }
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
@@ -478,6 +504,7 @@ lightApp = (function() {
     }
 
     Light.prototype.command_get_reportTime = function() {
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.ReportTime);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.ReportTime,
             type: 'GET',
@@ -500,6 +527,7 @@ lightApp = (function() {
         var body = {
             [resource]: value
         };
+        console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.ReportTime);
         console.log(JSON.stringify(body));
         $.ajax({
             url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.ReportTime,
@@ -508,7 +536,12 @@ lightApp = (function() {
             data: JSON.stringify(body),
             dataType: 'text',
             success: function(data) {
-                alert("success");
+                console.log(data);
+                if (data == "") {
+                    alert("success");
+                } else {
+                    alert(data);
+                }
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
@@ -518,6 +551,7 @@ lightApp = (function() {
     }
 
     Light.prototype.command_get_measure = function() {
+            console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.LightSensor);
             $.ajax({
                 url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.LightSensor,
                 type: 'GET',
@@ -540,6 +574,7 @@ lightApp = (function() {
         $("#light-onoffScheduleTable table tfoot").hide();
         $("#light-onoffScheduleTable table tbody").empty();
 
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.OnOffSchedule);
         // ajax ...
         $.ajax({
             url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.OnOffSchedule,
@@ -620,6 +655,7 @@ lightApp = (function() {
             var body = {
                 [resource]: value
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.OnOffSchedule);
             console.log(JSON.stringify(body));
             // ajax ...
             $.ajax({
@@ -629,7 +665,12 @@ lightApp = (function() {
                 data: JSON.stringify(body),
                 dataType: 'text',
                 success: function(data) {
-                    alert("success");
+                    console.log(data);
+                    if (data == "") {
+                        alert("success");
+                    } else {
+                        alert(data);
+                    }
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
@@ -644,6 +685,7 @@ lightApp = (function() {
         $("#light-dimmingScheduleTable table tfoot").hide();
         $("#light-dimmingScheduleTable table tbody").empty();
 
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.DimmingSchedule);
         // ajax ...
         $.ajax({
             url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.DimmingSchedule,
@@ -724,6 +766,7 @@ lightApp = (function() {
             var body = {
                 [resource]: value
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.DimmingSchedule);
             console.log(JSON.stringify(body));
             // ajax ...
             $.ajax({
@@ -733,7 +776,12 @@ lightApp = (function() {
                 data: JSON.stringify(body),
                 dataType: 'text',
                 success: function(data) {
-                    alert("success");
+                    console.log(data);
+                    if (data == "") {
+                        alert("success");
+                    } else {
+                        alert(data);
+                    }
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
@@ -748,6 +796,7 @@ lightApp = (function() {
             $("#light-groupTable table tfoot").hide();
             $("#light-groupTable table tbody").empty();
 
+            console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Group);
             // ajax ...
             $.ajax({
                 url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Group,
@@ -783,6 +832,7 @@ lightApp = (function() {
             $("#light-scenarioTable table tfoot").hide();
             $("#light-scenarioTable table tbody").empty();
 
+            console.log('GET request: url:' + '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Scenario);
             // ajax ...
             $.ajax({
                 url: '/core-command/api/v1/device/name/' + light.currentSelectDevice + '/command/' + light.MapCommand.Scenario,

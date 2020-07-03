@@ -329,8 +329,9 @@ groupApp = (function() {
         $('#group-device-list').show();
     }
 
-    // LightGroup start
+    // LightGroup start    
     Client.prototype.command_get_onoff = function() {
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.OnOff);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.OnOff,
             type: 'GET',
@@ -352,6 +353,7 @@ groupApp = (function() {
         var body = {
             [resource]: value
         };
+        console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.OnOff);
         console.log(JSON.stringify(body));
         // ajax ...
         $.ajax({
@@ -361,7 +363,12 @@ groupApp = (function() {
             data: JSON.stringify(body),
             dataType: 'text',
             success: function(data) {
-                alert("success");
+                console.log(data);
+                if (data == "") {
+                    alert("success");
+                } else {
+                    alert(data);
+                }
             },
             error: function(xhr, status, error) {
                 alert(error + '\n' + xhr.responseText);
@@ -370,6 +377,7 @@ groupApp = (function() {
     }
 
     Client.prototype.command_get_dimming = function() {
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.Dimming);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.Dimming,
             type: 'GET',
@@ -391,6 +399,7 @@ groupApp = (function() {
             var body = {
                 [resource]: value
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.Dimming);
             console.log(JSON.stringify(body));
             $.ajax({
                 url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.Dimming,
@@ -399,7 +408,12 @@ groupApp = (function() {
                 data: JSON.stringify(body),
                 dataType: 'text',
                 success: function(data) {
-                    alert("success");
+                    console.log(data);
+                    if (data == "") {
+                        alert("success");
+                    } else {
+                        alert(data);
+                    }
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
@@ -415,6 +429,7 @@ groupApp = (function() {
         $("#group-onoffScheduleTable table tbody").empty();
 
         // ajax ...
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.OnOffSchedule);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.OnOffSchedule,
             type: 'GET',
@@ -494,6 +509,7 @@ groupApp = (function() {
             var body = {
                 [resource]: value
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.OnOffSchedule);
             console.log(JSON.stringify(body));
             // ajax ...
             $.ajax({
@@ -503,7 +519,12 @@ groupApp = (function() {
                 data: JSON.stringify(body),
                 dataType: 'text',
                 success: function(data) {
-                    alert("success");
+                    console.log(data);
+                    if (data == "") {
+                        alert("success");
+                    } else {
+                        alert(data);
+                    }
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
@@ -518,6 +539,7 @@ groupApp = (function() {
         $("#group-dimmingScheduleTable table tbody").empty();
 
         // ajax ...
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.DimmingSchedule);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.DimmingSchedule,
             type: 'GET',
@@ -597,6 +619,7 @@ groupApp = (function() {
             var body = {
                 [resource]: value
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.DimmingSchedule);
             console.log(JSON.stringify(body));
             // ajax ...
             $.ajax({
@@ -606,7 +629,12 @@ groupApp = (function() {
                 data: JSON.stringify(body),
                 dataType: 'text',
                 success: function(data) {
-                    alert("success");
+                    console.log(data);
+                    if (data == "") {
+                        alert("success");
+                    } else {
+                        alert(data);
+                    }
                 },
                 error: function(xhr, status, error) {
                     alert(error + '\n' + xhr.responseText);
@@ -621,6 +649,7 @@ groupApp = (function() {
         $("#group-elementTable table tbody").empty();
 
         // ajax ...
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ListElement);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ListElement,
             type: 'GET',
@@ -654,6 +683,7 @@ groupApp = (function() {
         $('#group-element-manager').show("fast");
         $('#group-name-element-select').empty();
 
+        console.log('GET request: url:' + '/core-metadata/api/v1/device/profilename/' + client.ProfileElement);
         $.ajax({
             url: '/core-metadata/api/v1/device/profilename/' + client.ProfileElement,
             type: 'GET',
@@ -688,8 +718,9 @@ groupApp = (function() {
             [resource0]: value0,
             [resource1]: value1
         };
+        console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ManagerElement);
         console.log(JSON.stringify(body));
-        // ajax ...
+        // ajax ...        
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ManagerElement,
             type: 'PUT',
@@ -697,7 +728,12 @@ groupApp = (function() {
             data: JSON.stringify(body),
             dataType: 'text',
             success: function(data) {
-                alert("success");
+                console.log(data);
+                if (data == "") {
+                    alert("success");
+                } else {
+                    alert(data);
+                }
                 client.load_element();
             },
             error: function(xhr, status, error) {
@@ -721,6 +757,7 @@ groupApp = (function() {
                 [resource0]: value0,
                 [resource1]: value1
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ManagerElement);
             console.log(JSON.stringify(body));
             // ajax ...
             $.ajax({
@@ -730,7 +767,12 @@ groupApp = (function() {
                 data: JSON.stringify(body),
                 dataType: 'text',
                 success: function(data) {
-                    alert("success");
+                    console.log(data);
+                    if (data == "") {
+                        alert("success");
+                    } else {
+                        alert(data);
+                    }
                     client.cancelElement();
                     client.load_element();
                 },
@@ -747,6 +789,7 @@ groupApp = (function() {
             $("#group-parentTable table tbody").empty();
 
             // ajax ...
+            console.log('GET request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.Scenario);
             $.ajax({
                 url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.Scenario,
                 type: 'GET',

@@ -275,6 +275,7 @@ scenarioApp = (function() {
             var body = {
                 [resource]: value
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.Trigger);
             console.log(JSON.stringify(body));
             // ajax ...
             $.ajax({
@@ -299,6 +300,7 @@ scenarioApp = (function() {
         $("#scenario-elementTable table tbody").empty();
 
         // ajax ...
+        console.log('GET request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ManagerElement);
         $.ajax({
             url: '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ManagerElement,
             type: 'GET',
@@ -443,6 +445,7 @@ scenarioApp = (function() {
             var body = {
                 [resource]: value
             };
+            console.log('PUT request: url:' + '/core-command/api/v1/device/name/' + client.currentSelectDevice + '/command/' + client.MapCommand.ManagerElement);
             console.log(JSON.stringify(body));
             // ajax ...
             $.ajax({

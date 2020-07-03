@@ -111,7 +111,12 @@
                         <legend>Light </legend>
                         <div class="form-inline">
                             <label for="group-onoff-status">On-Off :</label>
-                            <input id="group-onoff-status" type="text" style="width: 100px;">
+                            <!-- <input id="group-onoff-status" type="text" style="width: 100px;"> -->
+                            <select id='group-onoff-status' name="group-onoff-status">
+                                <option value="" selected>--select--</option>
+                                <option value="true">On</option>
+                                <option value="false">Off</option>
+                            </select>
                             <button class="btn btn-success fa fa-check" onclick="groupApp.command_set_onoff();"></button> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <label for="group-dimming-status">Dimming :</label>
                             <input type="text" name="" id="group-dimming-status" style="width: 100px;">
